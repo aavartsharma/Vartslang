@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 //#include <syslinkC.h>
-#include "tokenization.h"
+#include "lexer.h"
 #include "asserts.h"
 #include "file.h"
 
@@ -10,11 +10,23 @@ int main(int argc, char* argv[]) {
     printf("No input file given\n");
     return EXIT_FAILURE;
   }
-  char *content = read_file(argv[1]);
-  if(content == NULL) {
+  src_code content = read_file(argv[1]);
+  if(content.src == NULL) {
     printf("file error\n");
     return EXIT_FAILURE;
   }
-  free(content);
+
+  printf("%s\n", content.src);
+  lexer src = {
+    .m_src = content.src,
+    .m_buf = "",
+    .m_index= 0,
+    .length = content.len,
+    .m_res = NULL
+  };
+  printf("peek -> %c\n",peek(src,0));
+  printf("cosome -> %c\n", consume(&src));
+  printf("peek -> %c\n",peek(src,1));
+  free(content.src);
   return 0;
 }

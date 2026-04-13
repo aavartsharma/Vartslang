@@ -1,9 +1,18 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include "asserts.h"
 
-char *read_file(const char *filename) {
+src_code read_file(const char *filename) {
   FILE *f = fopen(filename,"r");
-  if (!f) return NULL;
+
+  if (!f) {
+    printf("ERROR: in read_file");
+    src_code code = {
+      .src = NULL,
+      .len = 0
+    };
+    return code;
+  } 
   fseek(f,0, SEEK_END);
   size_t size = ftell(f);
   rewind(f);
@@ -11,11 +20,21 @@ char *read_file(const char *filename) {
   char *buffer = malloc(size +1);
   if (!buffer) {
     fclose(f); 
-    return NULL;
+    printf("ERROR: in read_file");
+    src_code code = {
+      .src = NULL,
+      .len = 0
+    };
+    return code;
   }
   fread(buffer, 1, size, f);
   buffer[size] = '\0';
   
   fclose(f);
-  return buffer;
+  src_code code = {
+    .src = buffer,
+    .len = size
+  };
+
+  return code;
 }
