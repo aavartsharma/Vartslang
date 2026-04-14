@@ -2,25 +2,42 @@
 #include<stdio.h>
 #define ASSERTS_H
 typedef enum {
-  ident,
-  exit_,
-  func,  // <-@->
-  lp, // <-?->
-  i32,
-  semi, //;
-  open_cur, //{
-  close_cur,
-  assm_eq, // <-
-  if_, // ?
-  flow_arrow, // ->
-  args_, // @ 
-  ret, // ^
-  plus,
-  minus,
-  mul,
-  div_,
-  and, // /\
-  or   // \/
+  // Keywords
+  FUNC,  // <-@->
+  LOP, // <-?->
+  ARG, // @  
+  IF, // ?
+  RET, // ^
+  I32,
+  
+  // operator/assign
+  ASSIGN, // <-
+  // operator/arthimatic
+  PLUS,
+  MINUS,
+  MUL,
+  DIV,
+  // operator/logical
+  AND, // //
+  OR,   // \/
+
+  //puctation
+  FLW_ARR, // ->
+  SEMI, //;
+  OCR, // {
+  CCR, // }
+
+  // liter 
+  INTGER,
+  FLOAT,
+  CHAR,
+
+  NULL_,
+
+  COLLECTION,
+  
+  //identifer
+  ID 
 } TokenType;
 
 typedef struct {
@@ -30,15 +47,20 @@ typedef struct {
 
 typedef struct {
   TokenType type;
-  char* value;
-  //struct Token *n_token;
+  char *value;
+  Token *n_token;
 } Token;
 
+// stack of char
+typedef struct Str_chr {
+  char c; 
+  Str_chr *pre_char;
+};
+
 typedef struct {
-  char *m_src;
-  char m_buf[10];
+  char m_buf[32]; // make this linked list
   size_t m_index;
-  size_t length;//
+  src_code src;
   Token *m_res;
 } lexer;
 #endif

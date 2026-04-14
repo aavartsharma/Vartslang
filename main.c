@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 //#include <syslinkC.h>
-#include "lexer.h"
-#include "asserts.h"
-#include "file.h"
+#include "src/lexer.h"
+#include "src/asserts.h"
+#include "src/file.h"
 
 int main(int argc, char* argv[]) {
   if(argc != 2) {
@@ -18,15 +18,14 @@ int main(int argc, char* argv[]) {
 
   printf("%s\n", content.src);
   lexer src = {
-    .m_src = content.src,
     .m_buf = "",
     .m_index= 0,
-    .length = content.len,
+    .src = content,
     .m_res = NULL
   };
-  printf("peek -> %c\n",peek(src,0));
+  printf("peek -> %c\n",peek(&src,0));
   printf("cosome -> %c\n", consume(&src));
-  printf("peek -> %c\n",peek(src,1));
-  free(content.src);
+  printf("peek -> %c\n",peek(&src,1));
+  free(src.src.src);
   return 0;
 }
