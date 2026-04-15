@@ -4,4 +4,6 @@
 char peek(lexer *src, int offset);
 
 char consume(lexer *src);
+
+void tokenize(lexer *src);
 #endif

@@ -47,6 +47,22 @@ Token to_token(const char *token_src) {
     t.type = I32;
     t.value = '\0';
   }
+  else if (strcmp(token_src, "i64") == 0) {
+    t.type = I64;
+    t.value = '\0';
+  }
+  else if (strcmp(token_src, "f32") == 0) {
+    t.type = F32;
+    t.value = '\0';
+  }
+  else if (strcmp(token_src, "f64") == 0) {
+    t.type = F64;
+    t.value = '\0';
+  }
+  else if (strcmp(token_src, "u8") == 0) {
+    t.type = U8;
+    t.value = '\0';
+  }
 
   // operator / assign
   else if (strcmp(token_src, "<-") == 0) {
@@ -94,30 +110,66 @@ Token to_token(const char *token_src) {
     t.value = '\0';
   }
   else {
-    printf("lexer.c line 96\n");
+    printf("lexer.c to_token function\n");
   }
   return t;
 }
 
-void tokenize(lexer *src){
+void tokenize(lexer *src) { // make this return list of tokens somehow
   for(int i=0; src->m_index < src->src.len; i++) {
+    printf("src->Mindex = %ld\n",src->m_index);
     if(isalpha(peek(src,0))) {
       char a = consume(src);
-      src->m_buf[0] = a;
-      char n_char = peek(src,0);
-      for(int i= 1;isalpha(n_char) || isdigit(n_char) || n_char == '_'; i++) {
-        
-        /*if(i>= 9) {
-          printf("long idenitfer name\n");
-        }
-        char a = consume(src);
-        strcat(src->m_buf, &a);
-        //src->m_buf[i] = a;  */
+      link_chr *ptr1 = (link_chr *) malloc(sizeof(link_chr));
+      ptr1->c = a;
+      ptr1->aft_chr = NULL;
+      link_chr *ptr2= ptr1;
+      for(int i= 1;isalpha(peek(src,0)) || isdigit(peek(src,0)) || peek(src,0) == '_'; i++) {
+         
+        if(i >17) break;
+        ptr2->aft_chr = (link_chr *) malloc(sizeof(link_chr));
+        ptr2->aft_chr->c = consume(src);
+        printf("peeky: %c\n", peek(src,0));
+        ptr2->aft_chr->aft_chr= NULL;
+        ptr2 = ptr2->aft_chr;
       }
+      printf("isspace %c\n", ptr2->c);
+
+      link_chr *ptr3 = ptr1;
+      for(int j =0;ptr3!=NULL; j++){
+        printf("%c", ptr3->c);
+        ptr3= ptr3->aft_chr; 
+      }
+      printf("\n");
       //src->m_buf[] = '\0';
-      to_token(src->m_buf);
+      //to_token(src->m_buf);
     }
-    else if (/*iis*/)
+    else if (isdigit(peek(src,0))) {
+      char a = consume(src);
+      link_chr *ptr1 = (link_chr *) malloc(sizeof(link_chr));
+      ptr1->c = a;
+      ptr1->aft_chr = NULL;
+      link_chr *ptr2= ptr1;
+      for(int i= 1; isdigit(peek(src,0)) || peek(src,0) == '_'; i++) {
+         
+        if(i >17) break;
+        ptr2->aft_chr = (link_chr *) malloc(sizeof(link_chr));
+        ptr2->aft_chr->c = consume(src);
+        printf("peeky: %c\n", peek(src,0));
+        ptr2->aft_chr->aft_chr= NULL;
+        ptr2 = ptr2->aft_chr;
+      }
+      link_chr *ptr3 = ptr1;
+      for(int j =0;ptr3!=NULL; j++){
+        printf("%c", ptr3->c);
+        ptr3= ptr3->aft_chr; 
+      }
+      printf("\n");
+    }
+    else {
+      src->m_index++;
+    }
+    
   }
 }
 

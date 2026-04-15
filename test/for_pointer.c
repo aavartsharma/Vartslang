@@ -6,12 +6,7 @@ typedef struct list_1 {
   struct list_1 *pre;
 } list;
 int main(void) {
-  list y =  {
-    .c = 'a',
-    .pre = NULL
-  };
-
-  list *ptr = &y;
+  list *ptr = NULL;
   for (int i = 0; i<10; i++){
     printf("%d - > %c\n", i+65, i+65);
     list *x = (list *) malloc(sizeof(list));

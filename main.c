@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include <syslinkC.h>
 #include "src/lexer.h"
 #include "src/asserts.h"
 #include "src/file.h"
@@ -23,9 +22,7 @@ int main(int argc, char* argv[]) {
     .src = content,
     .m_res = NULL
   };
-  printf("peek -> %c\n",peek(&src,0));
-  printf("cosome -> %c\n", consume(&src));
-  printf("peek -> %c\n",peek(&src,1));
+  tokenize(&src);
   free(src.src.src);
   return 0;
 }

@@ -9,7 +9,11 @@ typedef enum {
   IF, // ?
   RET, // ^
   I32,
-  
+  I64,
+  F32,
+  F64,
+  U8,
+    
   // operator/assign
   ASSIGN, // <-
   // operator/arthimatic
@@ -45,17 +49,17 @@ typedef struct {
   size_t len;
 } src_code;
 
-typedef struct {
+typedef struct token_raw {
   TokenType type;
   char *value;
-  Token *n_token;
+  struct token_raw *n_token;
 } Token;
 
 // stack of char
-typedef struct Str_chr {
+typedef struct Str_chr_raw {
   char c; 
-  Str_chr *pre_char;
-};
+  struct Str_chr_raw *aft_chr;
+} link_chr;
 
 typedef struct {
   char m_buf[32]; // make this linked list
