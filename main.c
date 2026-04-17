@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 
   printf("%s\n", content.src);
   lexer src = {
-    .m_buf = "",
+    .m_buf = NULL,
     .m_index= 0,
     .src = content,
     .m_res = NULL

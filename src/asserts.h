@@ -5,6 +5,7 @@ typedef enum {
   // Keywords
   FUNC,  // <-@->
   LOP, // <-?->
+  FEL, // <->
   ARG, // @  
   IF, // ?
   RET, // ^
@@ -21,15 +22,28 @@ typedef enum {
   MINUS,
   MUL,
   DIV,
+  INC, // ++
+  DEC, // -- 
   // operator/logical
-  AND, // //
+  MT, // >
+  LT, // <
+  MTE, // >=
+  LTE,  // <=
+  NOT,      // !
+  AND, //  
   OR,   // \/
+  EQU,  // ==
+  NEQU, // !=
+
 
   //puctation
   FLW_ARR, // ->
   SEMI, //;
   OCR, // {
   CCR, // }
+  COMMA, //,
+  DOT,   // .
+  NL, // \n
 
   // liter 
   INTGER,
@@ -62,9 +76,9 @@ typedef struct Str_chr_raw {
 } link_chr;
 
 typedef struct {
-  char m_buf[32]; // make this linked list
+  link_chr *m_buf; 
   size_t m_index;
   src_code src;
-  Token *m_res;
+  Token *m_res; // linked list of tokens
 } lexer;
 #endif
