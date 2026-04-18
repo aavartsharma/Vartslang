@@ -3,7 +3,7 @@
 #define ASSERTS_H
 typedef enum {
   // Keywords
-  FUNC,  // <-@->
+  FUNC=0,  // <-@->
   LOP, // <-?->
   FEL, // <->
   ARG, // @  

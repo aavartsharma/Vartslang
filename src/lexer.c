@@ -1,7 +1,7 @@
-#include "asserts.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include "asserts.h"
 
 char peek(lexer *src, int offset) {
   // IMPORTANT - this function will have no safe grard
@@ -27,6 +27,8 @@ TokenType to_token(const char *token_src) {
     return FUNC;
   } else if (strcmp(token_src, "<-?->") == 0) {
     return LOP;
+  } else if (strcmp(token_src, "<->") == 0) {
+    return FEL;
   } else if (strcmp(token_src, "@") == 0) {
     return ARG;
   } else if (strcmp(token_src, "?") == 0) {
@@ -48,7 +50,9 @@ TokenType to_token(const char *token_src) {
   // operator / assign
   else if (strcmp(token_src, "<-") == 0) {
     return ASSIGN;
-  } else if (strcmp(token_src, "+") == 0) {
+  } 
+  // operator/arthimatic
+  else if (strcmp(token_src, "+") == 0) {
     return PLUS;
   } else if (strcmp(token_src, "-") == 0) {
     return MINUS;
@@ -56,6 +60,23 @@ TokenType to_token(const char *token_src) {
     return MUL;
   } else if (strcmp(token_src, "/") == 0) {
     return DIV;
+  } else if (strcmp(token_src, "++") == 0){
+    return INC; 
+  } else if (strcmp(token_src, "--") == 0) {
+    return DEC;
+  }  
+
+  // operator/logical
+  else if (strcmp(token_src, ">") == 0) {
+    return MT;
+  } else if (strcmp(token_src, "<") == 0) {
+    return LT;
+  } else if (strcmp(token_src, ">=") == 0) {
+    return MTE;
+  } else if (strcmp(token_src, "<=") == 0) {
+    return LTE;
+  } else if (strcmp(token_src, "!") == 0) {
+    return NOT;
   } else if (strcmp(token_src, "/\\") == 0) {
     return AND;
   } else if (strcmp(token_src, "\\/") == 0) {
@@ -92,6 +113,7 @@ TokenType to_token(const char *token_src) {
   }
 }
 
+
 // function for repeactig tokeniztion
 //
 int alpha(char chr){
@@ -117,15 +139,15 @@ int extr(char chr) {
       ispunc =1;
   } 
 
-  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !ispunc==1);
+  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !(ispunc==1));
 }
-Token nae(lexer *src, int (*fun)(char)) {
+Token ret_token(lexer *src, int (*fun)(char)) {
   src->m_buf = (link_chr *)malloc(sizeof(link_chr));
   src->m_buf->c = consume(src);
   src->m_buf->aft_chr = NULL;
   link_chr *temp_ptr = src->m_buf;
-
   int lenght = 1;
+
   for (int i = 1;fun(peek(src,0));i++) {
     if (i > 17)
       break;
@@ -136,19 +158,14 @@ Token nae(lexer *src, int (*fun)(char)) {
     temp_ptr = temp_ptr->aft_chr;
     lenght++;
   }
-
   char *str_buf = (char *)malloc((lenght * sizeof(char)) + 1);
   for (int i = 0; src->m_buf != NULL; i++) {
     //printf("%c(%d)", src->m_buf->c,src->m_buf->c);
     printf("%c", src->m_buf->c);
     *(str_buf + i) = src->m_buf->c; //
     src->m_buf = src->m_buf->aft_chr;
-    // src->
-    //(str_buf + j) = (str_buf+j)->aft_chr;
     if (i >= lenght) {
-      printf("\n");
-
-      printf("tonken lenght is e then buffer by %d\n", i - lenght);
+      printf("\ntonken lenght is e then buffer by %d\n", i - lenght);
       break;
     }
   }
@@ -156,28 +173,46 @@ Token nae(lexer *src, int (*fun)(char)) {
   printf("\n");
 
   TokenType tok = to_token(str_buf);
-  //printf("token - %d\n", I32 == tok);
-
-  free(str_buf);
-  str_buf = NULL;
   Token a = {
     .type = tok,
     .value = '\0',
     .n_token = NULL
   };
+  free(str_buf);
+  str_buf = NULL;
   return a;
+}
+void push(Token **src,Token tok) { // i don't know why it didn't work with single pointer
+  if((*src) == NULL) {
+    Token *ptr_tok = (Token *) malloc(sizeof(Token));
+    *ptr_tok = tok;  
+    *src = ptr_tok;
+    return ;
+  }
+  push(&((*src)->n_token), tok);
+}
+
+void show_item(Token *t,int i) {
+  if(t == NULL) {
+    printf("----\n");
+    return;
+  }
+  printf("%d -> %d\n",i, (int) t->type );
+  show_item(t->n_token, i+1);
 }
 
 void tokenize(lexer *src) { // make this return list of tokens somehow
   for (int i = 0; src->m_index < src->src.len; i++) {
     if (isalpha(peek(src, 0))) {
-      nae(src,alpha);
+      push(&(src->m_res),ret_token(src,alpha));
     } else if (isdigit(peek(src, 0))) {
-      nae(src,numa);
+      push(&(src->m_res),ret_token(src,numa));
     } else if (!(peek(src,0) == ' ' || peek(src,0) == '\n')) {
-      nae(src,extr);
+      push(&(src->m_res),ret_token(src,extr));
     } else {
       src->m_index++;
     }
   }
+  printf("__________\n");
+  show_item(src->m_res,0);
 }

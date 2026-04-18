@@ -6,7 +6,7 @@ struct node {
 };
 
 void Parser(Token *token) {
-  
+
 }
 /*
 void peak(Token *m_token, int ahead=1){
