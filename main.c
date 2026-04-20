@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "src/lexer.h"
-#include "src/asserts.h"
-#include "src/file.h"
-
-
+#include <unistd.h>
+#include "lexer.h"
+#include "asserts.h"
+#include "file.h"
 
 int main(int argc, char* argv[]) {
   if(argc != 2) {
@@ -24,8 +23,10 @@ int main(int argc, char* argv[]) {
     .src = content,
     .m_res = NULL
   };
+  TokenType aaa = OR;
+  printf("%zu -> %zu \n", sizeof(TokenType),sizeof(aaa));
   tokenize(&src);
-
+  //parser(&src);
   free(src.src.src);
   return 0;
 }

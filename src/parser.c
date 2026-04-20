@@ -1,8 +1,10 @@
+#include "parser.h"
 #include "asserts.h"
+
 struct node {
   struct node *prant;
   void *value;
-  struct node *children;
+  struct node **children;
 };
 
 void Parser(Token *token) {

@@ -33,7 +33,7 @@ i32 newvar = name<10,3>;
     //code
 } -> <-?->{;name!="artermus";}
 
-<->{value <-> list} -> {
+<->{i32 value <-> list} -> {
 
 }
 

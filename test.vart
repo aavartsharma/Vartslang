@@ -8,7 +8,7 @@ i32 name <- 9;
 }
 
 ?{!y} -> {
-  name <-2;
+  name <-2_0;
 }
 <-@-> i32 num <- @{i32 x <- 3, i32 y <- 2} -> {
   name <- 40;
@@ -18,6 +18,6 @@ i32 name <- 9;
   name++;
 }
 
-<->{i32 value <-> list} -> {
+<->{u8 value <-> list} -> {
   name--;
 }

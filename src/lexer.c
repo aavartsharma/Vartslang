@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lexer.h"
 #include "asserts.h"
 
 char peek(lexer *src, int offset) {
@@ -108,11 +109,17 @@ TokenType to_token(const char *token_src) {
   } else if (isalpha(*token_src)) {
     return ID;
   } else {
-    printf("lexer.c to_token function: unknown token %s\n", token_src);
+    printf("lexer.c to_token function: unknown token %s, %d\n", token_src,*token_src);
     return 0; // make sure you define this
   }
 }
 
+int is_pucuation(char chr){
+  if(chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == '\n') {
+    return 1;
+  }
+  return 0;
+}
 
 // function for repeactig tokeniztion
 //
@@ -123,25 +130,11 @@ int numa(char chr) {
   return isdigit(chr) || chr == '_';
 }
 int extr(char chr) {
-  int ispunc = 0;
-  switch (chr) {
-    case ';':
-      ispunc = 1; 
-    case '{':
-      ispunc = 1;
-    case '}':
-      ispunc = 1;
-    case ',':
-      ispunc =1;
-    case '.':
-      ispunc =1;
-    case '\n':
-      ispunc =1;
-  } 
-
-  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !(ispunc==1));
+  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !(is_pucuation(chr)));
 }
-Token ret_token(lexer *src, int (*fun)(char)) {
+/*Token ret_token(lexer *src, int (*fun)(char)) {
+  // linked list of char 
+  // Don't know the length of the string
   src->m_buf = (link_chr *)malloc(sizeof(link_chr));
   src->m_buf->c = consume(src);
   src->m_buf->aft_chr = NULL;
@@ -149,8 +142,8 @@ Token ret_token(lexer *src, int (*fun)(char)) {
   int lenght = 1;
 
   for (int i = 1;fun(peek(src,0));i++) {
-    if (i > 17)
-      break;
+    if (i > 17) break; // for infinite loop protection
+    // linked list of char to chain it  
     temp_ptr->aft_chr = (link_chr *)malloc(sizeof(link_chr));
     temp_ptr->aft_chr->c = consume(src);
     //printf("peeky: %c\n", peek(src, 0));
@@ -158,13 +151,15 @@ Token ret_token(lexer *src, int (*fun)(char)) {
     temp_ptr = temp_ptr->aft_chr;
     lenght++;
   }
+  // now we know the lenght of the token 
+  // string buffer (to compare the to_token function)
   char *str_buf = (char *)malloc((lenght * sizeof(char)) + 1);
   for (int i = 0; src->m_buf != NULL; i++) {
     //printf("%c(%d)", src->m_buf->c,src->m_buf->c);
     printf("%c", src->m_buf->c);
     *(str_buf + i) = src->m_buf->c; //
     src->m_buf = src->m_buf->aft_chr;
-    if (i >= lenght) {
+    if (i >= lenght) { // safty graud
       printf("\ntonken lenght is e then buffer by %d\n", i - lenght);
       break;
     }
@@ -175,13 +170,48 @@ Token ret_token(lexer *src, int (*fun)(char)) {
   TokenType tok = to_token(str_buf);
   Token a = {
     .type = tok,
-    .value = '\0',
+    .value = (tok == ID || tok == INTGER) ? str_buf : '\0',
     .n_token = NULL
   };
-  free(str_buf);
-  str_buf = NULL;
+  // printf("token's value -> %s\n", a.value); // for test
+  //free(str_buf);
+  //str_buf = NULL; // denging pointer
   return a;
+}*/
+
+
+
+Token ret_token2(lexer *src, int (*fun)(char)) {
+    int capacity = 16;
+    int length = 0;
+
+    char *str_buf = malloc(capacity);
+    if (!str_buf){
+      printf("ERROR in ret_token2 in lexer.c\n");
+    }
+    while (fun(peek(src, 0))) {
+      if (length + 1 >= capacity) {
+        capacity *= 2;
+        char *tmp = realloc(str_buf, capacity);
+        if (!tmp) {
+          printf("ERROR in ret_token2 in lexer.c\n");
+        }
+        str_buf = tmp;
+      }
+      str_buf[length++] = consume(src);
+    }
+    str_buf[length] = '\0';
+    printf("%s\n", str_buf);
+    TokenType tok = to_token(str_buf);
+    Token a = {
+      .type = tok,
+      .value = (tok == ID || tok == INTGER) ? str_buf : '\0',
+      .n_token = NULL
+    };
+    free(str_buf);
+    return a;
 }
+
 void push(Token **src,Token tok) { // i don't know why it didn't work with single pointer
   if((*src) == NULL) {
     Token *ptr_tok = (Token *) malloc(sizeof(Token));
@@ -197,18 +227,31 @@ void show_item(Token *t,int i) {
     printf("----\n");
     return;
   }
-  printf("%d -> %d\n",i, (int) t->type );
+  printf("%s, %d -> %d\n",t->value,i, (int) t->type );
   show_item(t->n_token, i+1);
 }
 
 void tokenize(lexer *src) { // make this return list of tokens somehow
   for (int i = 0; src->m_index < src->src.len; i++) {
+    if(i>150) break;
     if (isalpha(peek(src, 0))) {
-      push(&(src->m_res),ret_token(src,alpha));
+      //push(&(src->m_res),ret_token2(src,alpha));
+      push(&(src->m_res),ret_token2(src,alpha));
     } else if (isdigit(peek(src, 0))) {
-      push(&(src->m_res),ret_token(src,numa));
+      //push(&(src->m_res),ret_token2(src,numa));
+      push(&(src->m_res),ret_token2(src,numa));
+    } else if (is_pucuation(peek(src,0))) {  // puncutations
+      char as = peek(src,0);
+      Token a = {
+        .type = to_token(&as),
+        .value ='\0',
+        .n_token = NULL
+      };                                      //
+      push(&(src->m_res), a);
     } else if (!(peek(src,0) == ' ' || peek(src,0) == '\n')) {
-      push(&(src->m_res),ret_token(src,extr));
+      //push(&(src->m_res),ret_token2(src,extr));
+      push(&(src->m_res),ret_token2(src,extr));
+      continue;
     } else {
       src->m_index++;
     }
