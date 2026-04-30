@@ -182,7 +182,8 @@ Token ret_token(lexer *src, int (*fun)(char)) {
   str_buf = NULL;
   return a;
 }
-void push(Token **src,Token tok) { // i don't know why it didn't work with single pointer
+void push(Token **src,Token tok) { 
+  // i don't know why it didn't work with single pointer
   if((*src) == NULL) {
     Token *ptr_tok = (Token *) malloc(sizeof(Token));
     *ptr_tok = tok;  
@@ -213,6 +214,5 @@ void tokenize(lexer *src) { // make this return list of tokens somehow
       src->m_index++;
     }
   }
-  printf("__________\n");
-  show_item(src->m_res,0);
+  //show_item(src->m_res,0);
 }

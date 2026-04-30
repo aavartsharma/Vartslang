@@ -15,6 +15,10 @@ i32 $$p2 <- &p1;
     ^ x + y; 
 }
 
+<-@-> i32 name <- @{i32 x<-0,i32 y <-6} -> {
+
+}
+
 i32 newvar = name<10,3>;
 
 <-?->{ i32 i <- 0 ; i> 33 ; i++} -> {
@@ -37,7 +41,7 @@ i32 newvar = name<10,3>;
 
 }
 
-struct user <- {
+<-> user <- {
     i32 name <- 32,
     i32 class <- 3,
     i32 play <- 32,

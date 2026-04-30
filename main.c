@@ -4,8 +4,6 @@
 #include "src/asserts.h"
 #include "src/file.h"
 
-
-
 int main(int argc, char* argv[]) {
   if(argc != 2) {
     printf("No input file given\n");

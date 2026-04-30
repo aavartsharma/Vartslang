@@ -8,6 +8,7 @@ struct testing {
 struct testing *name(struct testing *st) {
   return st;
 }
+
 int main(void){
   struct testing sample={
     .x = 34,
