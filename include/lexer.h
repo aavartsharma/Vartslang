@@ -5,5 +5,7 @@ char peek(lexer *src, int offset);
 
 char consume(lexer *src);
 
+TokenType to_token(const char *token_src);
+
 void tokenize(lexer *src);
 #endif

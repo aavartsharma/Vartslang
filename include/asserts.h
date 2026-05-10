@@ -5,10 +5,13 @@ typedef enum {
   // Keywords
   FUNC=0,  // <-@->
   LOP, // <-?->
-  FEL, // <->
+  FEL, // <-:-> 
+  LST,  // <-[]->
   ARG, // @  
+  CAL, // <|
   IF, // ?
   RET, // ^
+  LIT, //[]
   I32,
   I64,
   F32,
@@ -30,7 +33,7 @@ typedef enum {
   MTE, // >=
   LTE,  // <=
   NOT,      // !
-  AND, //  
+  AND, //   /\   /
   OR,   // \/
   EQU,  // ==
   NEQU, // !=
@@ -39,8 +42,7 @@ typedef enum {
   //puctation
   FLW_ARR, // ->
   SEMI, //;
-  OCR, // {
-  CCR, // }
+  OCR, CCR, // { }
   COMMA, //,
   DOT,   // .
   NL, // \n
@@ -58,6 +60,7 @@ typedef enum {
   ID 
 } TokenType;
 
+
 typedef struct {
   char *src; 
   size_t len;
@@ -70,15 +73,24 @@ typedef struct token_raw {
 } Token;
 
 // stack of char
-typedef struct Str_chr_raw {
-  char c; 
-  struct Str_chr_raw *aft_chr;
-} link_chr;
+typedef struct Node {
+  void *val; 
+  struct Node *next;
+} node;
 
 typedef struct {
-  link_chr *m_buf; 
+  node *m_buf; 
   size_t m_index;
   src_code src;
-  Token *m_res; // linked list of tokens
+  node *m_res; // linked list of tokens
 } lexer;
+
+node *new(void *val);
+
+node *next(node *cur);
+
+void push(node **cur, node *next_el);
+
+void show_item(Token *t, int i);
+
 #endif

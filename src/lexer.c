@@ -24,98 +24,67 @@ char consume(lexer *src) {
 
 TokenType to_token(const char *token_src) {
   // Keyword
-  if (strcmp(token_src, "<-@->") == 0) {
-    return FUNC;
-  } else if (strcmp(token_src, "<-?->") == 0) {
-    return LOP;
-  } else if (strcmp(token_src, "<->") == 0) {
-    return FEL;
-  } else if (strcmp(token_src, "@") == 0) {
-    return ARG;
-  } else if (strcmp(token_src, "?") == 0) {
-    return IF;
-  } else if (strcmp(token_src, "^") == 0) {
-    return RET;
-  } else if (strcmp(token_src, "i32") == 0) {
-    return I32;
-  } else if (strcmp(token_src, "i64") == 0) {
-    return I64;
-  } else if (strcmp(token_src, "f32") == 0) {
-    return F32;
-  } else if (strcmp(token_src, "f64") == 0) {
-    return F64;
-  } else if (strcmp(token_src, "u8") == 0) {
-    return U8;
-  }
+  if (strcmp(token_src, "<-@->") == 0)       return FUNC;
+  else if (strcmp(token_src, "<-?->") == 0)  return LOP;
+  else if (strcmp(token_src, "<-:->") == 0)  return FEL;
+  else if (strcmp(token_src, "<-[]->") == 0) return LST;
+  else if (strcmp(token_src, "@") == 0)      return ARG;
+  else if (strcmp(token_src, "<|") == 0)     return CAL;
+  else if (strcmp(token_src, "?") == 0)      return IF;
+  else if (strcmp(token_src, "^") == 0)      return RET;
+  else if (strcmp(token_src,"[]")== 0 )      return LIT;
+  else if (strcmp(token_src, "i32") == 0)    return I32;
+  else if (strcmp(token_src, "i64") == 0)    return I64;
+  else if (strcmp(token_src, "f32") == 0)    return F32;
+  else if (strcmp(token_src, "f64") == 0)    return F64;
+  else if (strcmp(token_src, "u8") == 0)     return U8;
+ 
 
   // operator / assign
-  else if (strcmp(token_src, "<-") == 0) {
-    return ASSIGN;
-  } 
+  else if (strcmp(token_src, "<-") == 0)     return ASSIGN;
+
   // operator/arthimatic
-  else if (strcmp(token_src, "+") == 0) {
-    return PLUS;
-  } else if (strcmp(token_src, "-") == 0) {
-    return MINUS;
-  } else if (strcmp(token_src, "*") == 0) {
-    return MUL;
-  } else if (strcmp(token_src, "/") == 0) {
-    return DIV;
-  } else if (strcmp(token_src, "++") == 0){
-    return INC; 
-  } else if (strcmp(token_src, "--") == 0) {
-    return DEC;
-  }  
+  else if (strcmp(token_src, "+") == 0)      return PLUS;
+  else if (strcmp(token_src, "-") == 0)      return MINUS;
+  else if (strcmp(token_src, "*") == 0)      return MUL;
+  else if (strcmp(token_src, "/") == 0)      return DIV;
+  else if (strcmp(token_src, "++") == 0)     return INC; 
+  else if (strcmp(token_src, "--") == 0)     return DEC;
 
   // operator/logical
-  else if (strcmp(token_src, ">") == 0) {
-    return MT;
-  } else if (strcmp(token_src, "<") == 0) {
-    return LT;
-  } else if (strcmp(token_src, ">=") == 0) {
-    return MTE;
-  } else if (strcmp(token_src, "<=") == 0) {
-    return LTE;
-  } else if (strcmp(token_src, "!") == 0) {
-    return NOT;
-  } else if (strcmp(token_src, "/\\") == 0) {
-    return AND;
-  } else if (strcmp(token_src, "\\/") == 0) {
-    return OR;
-  } else if (strcmp(token_src, "==") == 0) {
-    return EQU;
-  } else if (strcmp(token_src, "!=") == 0) {
-    return NEQU;
-  } 
+  else if (strcmp(token_src, ">") == 0)      return MT;
+  else if (strcmp(token_src, "<") == 0)      return LT;
+  else if (strcmp(token_src, ">=") == 0)     return MTE;
+  else if (strcmp(token_src, "<=") == 0)     return LTE;
+  else if (strcmp(token_src, "!") == 0)      return NOT;
+  else if (strcmp(token_src, "/\\") == 0)    return AND;
+  else if (strcmp(token_src, "\\/") == 0)    return OR;
+  else if (strcmp(token_src, "==") == 0)     return EQU;
+  else if (strcmp(token_src, "!=") == 0)     return NEQU; 
 
   // puncutations
-  else if (strcmp(token_src, "->") == 0) {
-    return FLW_ARR;
-  } else if (strcmp(token_src, ";") == 0) {
-    return SEMI;
-  } else if (strcmp(token_src, "{") == 0) {
-    return OCR;
-  } else if (strcmp(token_src, "}") == 0) {
-    return CCR;
-  } else if (strcmp(token_src, ",") == 0) {
-    return COMMA;
-  } else if (strcmp(token_src, "\n") == 0){
-    return NL;
-  }
+  else if (strcmp(token_src, "->") == 0)     return FLW_ARR;
+  else if (strcmp(token_src, ";") == 0)      return SEMI;
+  else if (strcmp(token_src, "{") == 0)      return OCR;
+  else if (strcmp(token_src, "}") == 0)      return CCR;
+  else if (strcmp(token_src, ",") == 0)      return COMMA;
+  else if (strcmp(token_src, ".") == 0)      return DOT;
+  else if (strcmp(token_src, "\n") == 0)     return NL;
   
 
-  else if (isdigit(*token_src)) {
-    return INTGER;
-  } else if (isalpha(*token_src)) {
-    return ID;
-  } else {
-    printf("lexer.c to_token function: unknown token %s, %d\n", token_src,*token_src);
-    return 0; // make sure you define this
+  else if (isdigit(*token_src)) return INTGER;
+  else if (isalpha(*token_src)) return ID;
+
+
+  else {
+    printf("lexer.c to_token function: unknown token %s, %d, %d\n", token_src,*token_src,*(token_src+1));
+    exit(-1);
+    return -1; // make sure you define this
   }
 }
 
 int is_pucuation(char chr){
-  if(chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == '\n') {
+  if(chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == ';') {
     return 1;
   }
   return 0;
@@ -132,34 +101,29 @@ int numa(char chr) {
 int extr(char chr) {
   return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !(is_pucuation(chr)));
 }
-/*Token ret_token(lexer *src, int (*fun)(char)) {
-  // linked list of char 
-  // Don't know the length of the string
-  src->m_buf = (link_chr *)malloc(sizeof(link_chr));
-  src->m_buf->c = consume(src);
-  src->m_buf->aft_chr = NULL;
-  link_chr *temp_ptr = src->m_buf;
-  int lenght = 1;
+
+Token ret_token(lexer *src, int (*fun)(char)) {
+  int lenght = 0;
 
   for (int i = 1;fun(peek(src,0));i++) {
-    if (i > 17) break; // for infinite loop protection
-    // linked list of char to chain it  
-    temp_ptr->aft_chr = (link_chr *)malloc(sizeof(link_chr));
-    temp_ptr->aft_chr->c = consume(src);
+    if (i > 17)
+      break;
+    if(src->m_buf == NULL) {
+      src->m_buf = new(consume(src));
+      node *temp_ptr = src->m_buf; 
+    }
+    temp_ptr->aft_chr = new(consume(src));
     //printf("peeky: %c\n", peek(src, 0));
-    temp_ptr->aft_chr->aft_chr = NULL;
-    temp_ptr = temp_ptr->aft_chr;
+    temp_ptr = next(temp_ptr);
     lenght++;
   }
-  // now we know the lenght of the token 
-  // string buffer (to compare the to_token function)
   char *str_buf = (char *)malloc((lenght * sizeof(char)) + 1);
   for (int i = 0; src->m_buf != NULL; i++) {
     //printf("%c(%d)", src->m_buf->c,src->m_buf->c);
     printf("%c", src->m_buf->c);
-    *(str_buf + i) = src->m_buf->c; //
-    src->m_buf = src->m_buf->aft_chr;
-    if (i >= lenght) { // safty graud
+    *(str_buf + i) = src->m_buf->val; //
+    src->m_buf = next(src->m_buf);
+    if (i >= lenght) {
       printf("\ntonken lenght is e then buffer by %d\n", i - lenght);
       break;
     }
@@ -170,49 +134,15 @@ int extr(char chr) {
   TokenType tok = to_token(str_buf);
   Token a = {
     .type = tok,
-    .value = (tok == ID || tok == INTGER) ? str_buf : '\0',
+    .value = '\0',
     .n_token = NULL
   };
-  // printf("token's value -> %s\n", a.value); // for test
-  //free(str_buf);
-  //str_buf = NULL; // denging pointer
+  free(str_buf);
+  str_buf = NULL;
   return a;
-}*/
-
-
-
-Token ret_token2(lexer *src, int (*fun)(char)) {
-    int capacity = 16;
-    int length = 0;
-
-    char *str_buf = malloc(capacity);
-    if (!str_buf){
-      printf("ERROR in ret_token2 in lexer.c\n");
-    }
-    while (fun(peek(src, 0))) {
-      if (length + 1 >= capacity) {
-        capacity *= 2;
-        char *tmp = realloc(str_buf, capacity);
-        if (!tmp) {
-          printf("ERROR in ret_token2 in lexer.c\n");
-        }
-        str_buf = tmp;
-      }
-      str_buf[length++] = consume(src);
-    }
-    str_buf[length] = '\0';
-    printf("%s\n", str_buf);
-    TokenType tok = to_token(str_buf);
-    Token a = {
-      .type = tok,
-      .value = (tok == ID || tok == INTGER) ? str_buf : '\0',
-      .n_token = NULL
-    };
-    free(str_buf);
-    return a;
 }
-
-void push(Token **src,Token tok) { // i don't know why it didn't work with single pointer
+/*void push(Token **src,Token tok) { 
+  // i don't know why it didn't work with single pointer
   if((*src) == NULL) {
     Token *ptr_tok = (Token *) malloc(sizeof(Token));
     *ptr_tok = tok;  
@@ -220,38 +150,20 @@ void push(Token **src,Token tok) { // i don't know why it didn't work with singl
     return ;
   }
   push(&((*src)->n_token), tok);
-}
-
-void show_item(Token *t,int i) {
-  if(t == NULL) {
-    printf("----\n");
-    return;
-  }
-  printf("%s, %d -> %d\n",t->value,i, (int) t->type );
-  show_item(t->n_token, i+1);
-}
+}*/
 
 void tokenize(lexer *src) { // make this return list of tokens somehow
   for (int i = 0; src->m_index < src->src.len; i++) {
     if(i>150) break;
     if (isalpha(peek(src, 0))) {
-      //push(&(src->m_res),ret_token2(src,alpha));
-      push(&(src->m_res),ret_token2(src,alpha));
+      push(&(src->m_res),ret_token(src,alpha));
     } else if (isdigit(peek(src, 0))) {
-      //push(&(src->m_res),ret_token2(src,numa));
-      push(&(src->m_res),ret_token2(src,numa));
-    } else if (is_pucuation(peek(src,0))) {  // puncutations
-      char as = peek(src,0);
-      Token a = {
-        .type = to_token(&as),
-        .value ='\0',
-        .n_token = NULL
-      };                                      //
-      push(&(src->m_res), a);
+      Token token_test = ret_token(src,numa);
+      printf("token test: %d\n", token_test.type);
+
+      push(&(src->m_res),new(*token_test)); // coredmpe
     } else if (!(peek(src,0) == ' ' || peek(src,0) == '\n')) {
-      //push(&(src->m_res),ret_token2(src,extr));
-      push(&(src->m_res),ret_token2(src,extr));
-      continue;
+      push(&(src->m_res),ret_token(src,extr));
     } else {
       src->m_index++;
     }
