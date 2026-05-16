@@ -4,7 +4,7 @@
 #include "lexer.h"
 #include "asserts.h"
 
-char peek(lexer *src, int offset) {
+char peek_char(lexer *src, int offset) {
   // IMPORTANT - this function will have no safe grard
   // peek func returns the char m_index + offset
   // without advencing the cursor
@@ -13,7 +13,7 @@ char peek(lexer *src, int offset) {
   return *(src->src.src + src->m_index + offset);
 }
 
-char consume(lexer *src) {
+char consume_char(lexer *src) {
   // return the charater at m_index and increment
   // the index by one
   if (src->m_index >= src->src.len)
@@ -61,6 +61,8 @@ TokenType to_token(const char *token_src) {
   else if (strcmp(token_src, "\\/") == 0)    return OR;
   else if (strcmp(token_src, "==") == 0)     return EQU;
   else if (strcmp(token_src, "!=") == 0)     return NEQU; 
+  // operator/somthing
+  else if (strcmp(token_src, "<-:")==0)      return IN;
 
   // puncutations
   else if (strcmp(token_src, "->") == 0)     return FLW_ARR;
@@ -90,6 +92,10 @@ int is_pucuation(char chr){
   return 0;
 }
 
+int reverse_puc(char chr) {
+  return !is_pucuation(chr);
+}
+
 // function for repeactig tokeniztion
 //
 int alpha(char chr){
@@ -99,43 +105,45 @@ int numa(char chr) {
   return isdigit(chr) || chr == '_';
 }
 int extr(char chr) {
-  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !(is_pucuation(chr)));
+  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !is_pucuation(chr));
 }
 
-Token ret_token(lexer *src, int (*fun)(char)) {
+Token_node ret_token(lexer *src, int (*fun)(char), int offset) {
   int lenght = 0;
-
-  for (int i = 1;fun(peek(src,0));i++) {
+  //src->m_buf = new_chr_node(consume_char(src));
+  chr_node **temp_ptr = &(src->m_buf); 
+  for (int i = 0;fun(peek_char(src,offset));i++) {
     if (i > 17)
       break;
-    if(src->m_buf == NULL) {
-      src->m_buf = new(consume(src));
-      node *temp_ptr = src->m_buf; 
-    }
-    temp_ptr->aft_chr = new(consume(src));
-    //printf("peeky: %c\n", peek(src, 0));
-    temp_ptr = next(temp_ptr);
+    printf("peeky: %c\n", peek_char(src, 0));
+    char temp_char_var = consume_char(src);
+    
+    //temp_ptr->next_el = new_chr_node(temp_char_var);
+    push_chr_node(temp_ptr,new_chr_node(temp_char_var));
+    //chr_node *ptr_tmp = next_chr_node(*temp_ptr);
+    //temp_ptr = &ptr_tmp;
     lenght++;
   }
   char *str_buf = (char *)malloc((lenght * sizeof(char)) + 1);
   for (int i = 0; src->m_buf != NULL; i++) {
-    //printf("%c(%d)", src->m_buf->c,src->m_buf->c);
-    printf("%c", src->m_buf->c);
+    //printL("%c(%d)", src->m_buf->val,src->m_buf->val);
+    //printf("%d %d/n",src->m_buf == NULL,src->m_buf->next_el == NULL);
     *(str_buf + i) = src->m_buf->val; //
-    src->m_buf = next(src->m_buf);
-    if (i >= lenght) {
-      printf("\ntonken lenght is e then buffer by %d\n", i - lenght);
+    src->m_buf = next_chr_node(src->m_buf);
+    if (i > lenght) {
+      printf("\n");
+      printE("tonken lenght is e then buffer by %d", i - lenght);
       break;
     }
   }
+  //printf("\n");
   *(str_buf + lenght) = '\0';
-  printf("\n");
+  printf("str_buf : %s\n",str_buf);
 
   TokenType tok = to_token(str_buf);
-  Token a = {
-    .type = tok,
-    .value = '\0',
-    .n_token = NULL
+  Token_node a = {
+    .val = tok,
+    .next_el = NULL
   };
   free(str_buf);
   str_buf = NULL;
@@ -153,21 +161,28 @@ Token ret_token(lexer *src, int (*fun)(char)) {
 }*/
 
 void tokenize(lexer *src) { // make this return list of tokens somehow
+  printf("reading source code\n");
   for (int i = 0; src->m_index < src->src.len; i++) {
-    if(i>150) break;
-    if (isalpha(peek(src, 0))) {
-      push(&(src->m_res),ret_token(src,alpha));
-    } else if (isdigit(peek(src, 0))) {
-      Token token_test = ret_token(src,numa);
-      printf("token test: %d\n", token_test.type);
-
-      push(&(src->m_res),new(*token_test)); // coredmpe
-    } else if (!(peek(src,0) == ' ' || peek(src,0) == '\n')) {
-      push(&(src->m_res),ret_token(src,extr));
+    if(i>500) break;
+    if (isalpha(peek_char(src, 0))) {
+      Token_node tok = ret_token(src,alpha,0);
+      push_Token_node(&(src->m_res),&tok);
+    } else if (isdigit(peek_char(src, 0))) {
+      Token_node token_test = ret_token(src,numa,0);
+       
+      push_Token_node(&(src->m_res),&token_test);
+    } else if (is_pucuation(peek_char(src,0))){
+      Token_node token_test = ret_token(src,reverse_puc,-1);
+      push_Token_node(&(src->m_res), &token_test);
+    } else if (!(peek_char(src,0) == ' ' || peek_char(src,0) == '\n')) {
+      Token_node tok = ret_token(src,extr,0);
+      push_Token_node(&(src->m_res),&tok);
+      
     } else {
       src->m_index++;
     }
   }
   printf("__________\n");
-  show_item(src->m_res,0);
+  //show_item_Token_node(src->m_res);
+  
 }

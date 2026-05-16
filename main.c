@@ -8,6 +8,7 @@
 int main(int argc, char* argv[]) {
   if(argc != 2) {
     printf("No input file given\n");
+    printE("NO INPUT FILE GIVEN");
     return EXIT_FAILURE;
   }
   src_code content = read_file(argv[1]);
@@ -21,23 +22,18 @@ int main(int argc, char* argv[]) {
     .m_buf = NULL,
     .m_index= 0,
     .src = content,
-    .m_res = NULL
+    .m_res = NULL 
   };
   if(0) {
-    TokenType a = to_token("; ");
+    TokenType a = to_token(";");
     printf("%d\n----\n", a);
-    //new()
-    Token aa = {
-      .type = a,
-      .value = '\0',
-      .n_token = NULL
+    Token_node aa = {
+      .val = a,
+      .next_el = NULL
     };
-    //push(&(src.m_res), *aa);
     //printf("%d\n", (src.m_res)->type);
     return 0;
   }
-  TokenType aaa = OR;
-  printf("%zu -> %zu \n", sizeof(TokenType),sizeof(aaa));
   tokenize(&src);
   //parser(&src);
   free(src.src.src);

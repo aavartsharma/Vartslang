@@ -1,5 +1,6 @@
 #ifndef ASSERTS_H
 #include<stdio.h>
+#include<stdlib.h>
 #define ASSERTS_H
 typedef enum {
   // Keywords
@@ -37,7 +38,8 @@ typedef enum {
   OR,   // \/
   EQU,  // ==
   NEQU, // !=
-
+  //some operator
+  IN,  // <-:
 
   //puctation
   FLW_ARR, // ->
@@ -60,37 +62,72 @@ typedef enum {
   ID 
 } TokenType;
 
+#define LINKED_LIST(type, name)      \
+typedef struct name {          \
+  type val;                    \
+  struct name *next_el;     \
+} name;                 \
+static name *new_##name(type val) {   \
+  name *temp = (name *) malloc(sizeof(name));\
+  temp->val = val; \
+  temp->next_el = NULL; \
+  return temp; \
+} \
+static name *next_##name(name *cur){ \
+  return cur->next_el; \
+}     \
+static name *push_##name(name **cur,name *next_el) {\
+  if(cur == NULL) { \
+    fprintf(stderr, "Node is NULL\n"); \
+    return NULL; \
+  } \
+  if(*cur == NULL) {  \
+    *cur = next_el;   \
+    return next_el;    \
+  }\
+  if((*cur)->next_el == NULL) { \
+    (*cur)->next_el = next_el; \
+    return next_el; \
+  } \
+  name *temp_ptr = next_##name(*cur); \
+  return push_##name(&temp_ptr,next_el);\
+}\
+static void show_item_##name(name *n) { \
+  if(n == NULL) { \
+    printf("----\n"); \
+    return; \
+  }  \
+  show_item_##name(next_##name(n)); \
+} \
 
+LINKED_LIST(char,chr_node);
+LINKED_LIST(TokenType,Token_node);
+       //
 typedef struct {
   char *src; 
   size_t len;
 } src_code;
 
-typedef struct token_raw {
+/*typedef struct token_raw {
   TokenType type;
-  char *value;
   struct token_raw *n_token;
 } Token;
-
-// stack of char
-typedef struct Node {
-  void *val; 
-  struct Node *next;
-} node;
-
+*/
 typedef struct {
-  node *m_buf; 
+  chr_node *m_buf; 
   size_t m_index;
   src_code src;
-  node *m_res; // linked list of tokens
+  Token_node *m_res; // linked list of tokens
 } lexer;
 
-node *new(void *val);
+void printE_impl(const char *func, const char *file,int line, const char *message, ...);
 
-node *next(node *cur);
+void printL_impl(const char *func, const char *file, int line, const char *message, ...);
 
-void push(node **cur, node *next_el);
+#define printE(msg, ...) \
+    printE_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
 
-void show_item(Token *t, int i);
+#define printL(msg, ...) \
+    printL_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
 
 #endif

@@ -1,7 +1,7 @@
 all: compile
 
 compile:
-	gcc -Iinclude main.c src/*.c -o vartslang.out
+	gcc -Iinclude main.c src/*.c -o vartc
 	ls src/*.c
 	echo "compilation compeleted"
 
