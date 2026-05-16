@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include "file.h"
 #include "asserts.h"
 
 src_code read_file(const char *filename) {
