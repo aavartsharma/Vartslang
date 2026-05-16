@@ -1,0 +1,133 @@
+#ifndef ASSERTS_H
+#include<stdio.h>
+#include<stdlib.h>
+#define ASSERTS_H
+typedef enum {
+  // Keywords
+  FUNC=0,  // <-@->
+  LOP, // <-?->
+  FEL, // <-:-> 
+  LST,  // <-[]->
+  ARG, // @  
+  CAL, // <|
+  IF, // ?
+  RET, // ^
+  LIT, //[]
+  I32,
+  I64,
+  F32,
+  F64,
+  U8,
+    
+  // operator/assign
+  ASSIGN, // <-
+  // operator/arthimatic
+  PLUS,
+  MINUS,
+  MUL,
+  DIV,
+  INC, // ++
+  DEC, // -- 
+  // operator/logical
+  MT, // >
+  LT, // <
+  MTE, // >=
+  LTE,  // <=
+  NOT,      // !
+  AND, //   /\   /
+  OR,   // \/
+  EQU,  // ==
+  NEQU, // !=
+  //some operator
+  IN,  // <-:
+
+  //puctation
+  FLW_ARR, // ->
+  SEMI, //;
+  OCR, CCR, // { }
+  COMMA, //,
+  DOT,   // .
+  NL, // \n
+
+  // liter 
+  INTGER,
+  FLOAT,
+  CHAR,
+
+  NULL_,
+
+  COLLECTION,
+  
+  //identifer
+  ID 
+} TokenType;
+
+#define LINKED_LIST(type, name)      \
+typedef struct name {          \
+  type val;                    \
+  struct name *next_el;     \
+} name;                 \
+static name *new_##name(type val) {   \
+  name *temp = (name *) malloc(sizeof(name));\
+  temp->val = val; \
+  temp->next_el = NULL; \
+  return temp; \
+} \
+static name *next_##name(name *cur){ \
+  return cur->next_el; \
+}     \
+static name *push_##name(name **cur,name *next_el) {\
+  if(cur == NULL) { \
+    fprintf(stderr, "Node is NULL\n"); \
+    return NULL; \
+  } \
+  if(*cur == NULL) {  \
+    *cur = next_el;   \
+    return next_el;    \
+  }\
+  if((*cur)->next_el == NULL) { \
+    (*cur)->next_el = next_el; \
+    return next_el; \
+  } \
+  name *temp_ptr = next_##name(*cur); \
+  return push_##name(&temp_ptr,next_el);\
+}\
+static void show_item_##name(name *n) { \
+  if(n == NULL) { \
+    printf("----\n"); \
+    return; \
+  }  \
+  show_item_##name(next_##name(n)); \
+} \
+
+LINKED_LIST(char,chr_node);
+LINKED_LIST(TokenType,Token_node);
+       //
+typedef struct {
+  char *src; 
+  size_t len;
+} src_code;
+
+/*typedef struct token_raw {
+  TokenType type;
+  struct token_raw *n_token;
+} Token;
+*/
+typedef struct {
+  chr_node *m_buf; 
+  size_t m_index;
+  src_code src;
+  Token_node *m_res; // linked list of tokens
+} lexer;
+
+void printE_impl(const char *func, const char *file,int line, const char *message, ...);
+
+void printL_impl(const char *func, const char *file, int line, const char *message, ...);
+
+#define printE(msg, ...) \
+    printE_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+
+#define printL(msg, ...) \
+    printL_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+
+#endif
