@@ -22,7 +22,7 @@ char consume_char(lexer *src) {
   return *(src->src.src + src->m_index - 1);
 }
 
-TokenType to_token(const char *token_src) {
+TokenType to_token(const String token_src) {
   // Keyword
   if (strcmp(token_src, "<-@->") == 0)       return FUNC;
   else if (strcmp(token_src, "<-?->") == 0)  return LOP;
@@ -85,49 +85,19 @@ TokenType to_token(const char *token_src) {
   }
 }
 
-int is_pucuation(char chr){
-  if(chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == ';') {
-    return 1;
-  }
-  return 0;
-}
-
-int reverse_puc(char chr) {
-  return !is_pucuation(chr);
-}
-
-// function for repeactig tokeniztion
-//
-int alpha(char chr){
-  return isalpha(chr) || isdigit(chr) || chr == '_';
-}
-int numa(char chr) {
-  return isdigit(chr) || chr == '_';
-}
-int extr(char chr) {
-  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !is_pucuation(chr));
-}
-
 Token_node ret_token(lexer *src, int (*fun)(char), int offset) {
   int lenght = 0;
-  //src->m_buf = new_chr_node(consume_char(src));
   chr_node **temp_ptr = &(src->m_buf); 
   for (int i = 0;fun(peek_char(src,offset));i++) {
     if (i > 17)
       break;
     printf("peeky: %c\n", peek_char(src, 0));
     char temp_char_var = consume_char(src);
-    
-    //temp_ptr->next_el = new_chr_node(temp_char_var);
     push_chr_node(temp_ptr,new_chr_node(temp_char_var));
-    //chr_node *ptr_tmp = next_chr_node(*temp_ptr);
-    //temp_ptr = &ptr_tmp;
     lenght++;
   }
-  char *str_buf = (char *)malloc((lenght * sizeof(char)) + 1);
+  String str_buf = (char *)malloc((lenght * sizeof(char)) + 1);
   for (int i = 0; src->m_buf != NULL; i++) {
-    //printL("%c(%d)", src->m_buf->val,src->m_buf->val);
-    //printf("%d %d/n",src->m_buf == NULL,src->m_buf->next_el == NULL);
     *(str_buf + i) = src->m_buf->val; //
     src->m_buf = next_chr_node(src->m_buf);
     if (i > lenght) {
@@ -136,7 +106,6 @@ Token_node ret_token(lexer *src, int (*fun)(char), int offset) {
       break;
     }
   }
-  //printf("\n");
   *(str_buf + lenght) = '\0';
   printf("str_buf : %s\n",str_buf);
 
@@ -149,16 +118,27 @@ Token_node ret_token(lexer *src, int (*fun)(char), int offset) {
   str_buf = NULL;
   return a;
 }
-/*void push(Token **src,Token tok) { 
-  // i don't know why it didn't work with single pointer
-  if((*src) == NULL) {
-    Token *ptr_tok = (Token *) malloc(sizeof(Token));
-    *ptr_tok = tok;  
-    *src = ptr_tok;
-    return ;
+
+int alpha(char chr){
+  return isalpha(chr) || isdigit(chr) || chr == '_';
+}
+int numa(char chr) {
+  return isdigit(chr) || chr == '_';
+}
+int extr(char chr) {
+  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !is_pucuation(chr));
+}
+
+int is_pucuation(char chr){
+  if(chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == ';') {
+    return 1;
   }
-  push(&((*src)->n_token), tok);
-}*/
+  return 0;
+}
+
+int reverse_puc(char chr) {
+  return !is_pucuation(chr);
+}
 
 void tokenize(lexer *src) { // make this return list of tokens somehow
   printf("reading source code\n");
@@ -177,9 +157,8 @@ void tokenize(lexer *src) { // make this return list of tokens somehow
     } else if (!(peek_char(src,0) == ' ' || peek_char(src,0) == '\n')) {
       Token_node tok = ret_token(src,extr,0);
       push_Token_node(&(src->m_res),&tok);
-      
     } else {
-      src->m_index++;
+      consume_char(src);
     }
   }
   printf("__________\n");

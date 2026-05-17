@@ -103,8 +103,10 @@ static void show_item_##name(name *n) { \
 LINKED_LIST(char,chr_node);
 LINKED_LIST(TokenType,Token_node);
        //
+typedef char *String;
+typedef const char *CString;
 typedef struct {
-  char *src; 
+  String src; 
   size_t len;
 } src_code;
 
@@ -120,9 +122,14 @@ typedef struct {
   Token_node *m_res; // linked list of tokens
 } lexer;
 
-void printE_impl(const char *func, const char *file,int line, const char *message, ...);
+typedef struct {
+  Token_node *m_buf; 
+  lexer lexer_src;
+} parser;
 
-void printL_impl(const char *func, const char *file, int line, const char *message, ...);
+void printE_impl(CString func,CString file,int line, CString message, ...);
+
+void printL_impl(CString func, CString file, int line, CString message, ...);
 
 #define printE(msg, ...) \
     printE_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)

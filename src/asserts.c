@@ -36,7 +36,7 @@ void show_item(Token *t,int i) {
   show_item(t->n_token, i+1);
 }*/
 
-void printE_impl(const char *func, const char *file,int line, const char *message, ...) {
+void printE_impl(CString func, CString file,int line, CString message, ...) {
 
     va_list args;
 
@@ -49,7 +49,7 @@ void printE_impl(const char *func, const char *file,int line, const char *messag
     printf("\t\n");
 }
 
-void printL_impl(const char *func, const char *file,int line, const char *message, ...) {
+void printL_impl(CString func, CString file,int line, CString message, ...) {
 
     va_list args;
 

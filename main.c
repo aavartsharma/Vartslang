@@ -1,15 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-<<<<<<< HEAD
-#include "src/lexer.h"
-#include "src/asserts.h"
-#include "src/file.h"
-=======
-#include <unistd.h>
 #include "lexer.h"
 #include "asserts.h"
 #include "file.h"
->>>>>>> origin/main
 
 int main(int argc, char* argv[]) {
   if(argc != 2) {

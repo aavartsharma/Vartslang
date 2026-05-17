@@ -6,16 +6,15 @@
   void *value;
   struct node **children;
 };*/
-
-/*void Parser(Token_node *token) {
-
-}*/
-
-/*
-void peak(Token *m_token, int ahead=1){
+void peak_token(lexer *src, int offset){
    
 }
 
-Token consum(Token *m_token) {
-  return m_token++;
-} */
+Token_node consume_token() {
+  /*return m_token++;*/
+}
+
+void Parser(Token_node *token) {
+
+}
+

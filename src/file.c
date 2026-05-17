@@ -3,7 +3,7 @@
 #include "file.h"
 #include "asserts.h"
 
-src_code read_file(const char *filename) {
+src_code read_file(CString filename) {
   FILE *f = fopen(filename,"r");
 
   if (!f) {
@@ -18,7 +18,7 @@ src_code read_file(const char *filename) {
   size_t size = ftell(f);
   rewind(f);
 
-  char *buffer = malloc(size +1);
+  String buffer = malloc(size +1);
   if (!buffer) {
     fclose(f); 
     printf("ERROR: in read_file");
