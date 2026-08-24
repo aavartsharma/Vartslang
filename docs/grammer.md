@@ -2,20 +2,89 @@
 
 <program> ::= (<compound_stm>)*
 
-<compound_stm> ::= <assign_stm> | <if_stm> | <if_else_statment | <lp_stm> | <block> 
+<compound_stm> ::= <assign_stm> | <if_stm> | <lp_stm> | <do_lp_stm> | <for_each_loop> | <function_call>  
 
-<expr> ::= <literal>| <unary> | <binary> | <grouping> | <expr> "*" <factor> | <expr> "+" <factor> | <expr> "-" <factor>
+<assign_stm> ::= <assign/variable> | <assign/array> | <assign/function> | <assign/struct> | <assign/enum> | <assign/class>
 
-<literal> ::= <NUMBER> | <STRING> | "true" | "false" | "NULL";
+<if_stm> ::= "?" "{" <expr> "}" <arrow> <block> ( <arrow> "?" "{" <expr> "}" )* ( (<arrow> <block>) | E )
+
+<lp_stm> ::= "<-?->" "{" E | ( <assign_stm> ("," <assign_stm>)* ) ";" <expr> | E ";" E | (<expr> | ( <expr> ",")) "}" <arrow> <block>
+
+<do_lp_stm> ::= <block> <arrow> "<-?->" {" E | ( <assign_stm> ("," <assign_stm>)* ) ";" <expr> | E ";" E | (<expr> | ( <expr> ",")) "}"
+
+<for_each_loop> ::= "<-:->" "{" <type> <identifer> "<-:" <identifer> "}" <arrow> <block>
+
+<function_call> ::= <identifer> "<|" "{" (<expr> | <> ) | E "}"
+
+<block> ::= "{" (<compound_stm>)* "}"
+
+<assign/variable> ::= <type> <identifer> <op/assign> <expr> ";"
+
+<assign/array> ::= "<-[]->" "{" <type>  ( "," <type> )* "}"
+
+<assign/function> ::=
+
+<assign/struct> ::=
+
+<assign/enum> ::=
+
+<assign/class> ::=
+
+<type> ::=
+
+<expr> ::= <primary_expr> | <unary_expr> | <binary_expr> | <grouping>
+
+<prefix> ::= <literal> | <unary> | <identifer> | <grouping>
 
 <grouping> ::= "(" <expr> ")"
 
-<unary> ::= ( "-" | "!") <expr>;
+<unary_expr> ::= <op/prefix> ( <primary_expr> | "(" <unary_expr> ")" ) | 
+                ( <primary_expr> | "(" <unary_expr> ")" ) <op/prefix>|
+                <op/other> <grouping>
 
-<binary> ::= <expr> <oprator> <expr>
+<binary_expr> ::= <expr> <oprator> <expr>
 
-<oprator> ::= 
+<oprator> ::= <bin_op> | <prefix_op> | <postfix_op>
 
-<term> ::= <term> "*" <factor> | <term> "+" <factor> | <term> "-" <factor>
+<bin_op> ::= <op/assign> | <op/arthimatic> | <op/logical> | <op/relation> | <op/membership> | <op/bitwise> 
 
-<factor> ::= <digit> | ( <expr> )
+<unary_op> ::= <prefix_op> | <postfix_op>
+
+<prefix_op> ::= <prefix_op/> | "++" | "--"
+
+<postfix_op> ::= "++" | "--" 
+
+<prefix_op/> ::= "+" | "-" | "!" | "~"
+
+<op/assign> ::= "<-"
+
+<op/arthimatic> ::= "+" | "-" | "*" | "/" | "%" |
+
+<op/logical> ::= "||" | "&&" | "!"
+
+<op/relation> ::= "==" | "!=" | ">=" | "<=" | ">" | "<"
+
+<op/membership> ::= "<-:"
+
+<op/bitwise> ::= "~" | "&" | "^~^" | "|"
+
+
+<primary_expr> ::= <literal> | <identifer> | <function_call>
+
+<literal> ::= <numral> | <STRING> | "true" | "false" | "NULL"
+
+<identifer> ::= ( "A" | "B" | ... | "Z" | "a" | "b" | ... | "z" | "_") ( "A" | "B" | ... | "Z" | "a" | "b" | ... | "z" | "_" | <digit>)*
+
+<numral> ::= <digit> (<digit>)*
+
+<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+<STRING> ::= 
+
+<arrow> ::= "->"
+
+
+## definitions
+
+term = an peice of expr separted by operator
+factor = literal that is

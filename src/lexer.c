@@ -24,15 +24,20 @@ char consume_char(lexer *src) {
 
 TokenType to_token(const String token_src) {
   // Keyword
-  if (strcmp(token_src, "<-@->") == 0)       return FUNC;
+  if (strcmp(token_src, "<-@->") == 0)       return FUN;
   else if (strcmp(token_src, "<-?->") == 0)  return LOP;
   else if (strcmp(token_src, "<-:->") == 0)  return FEL;
   else if (strcmp(token_src, "<-[]->") == 0) return LST;
+  else if (strcmp(token_src, "<<|>>") == 0)  return STC;
+  else if (strcmp(token_src, "<-|->") == 0)  return ENM;
+  else if (strcmp(token_src, "<-<:->") == 0) return CLS;
+  else if (strcmp(token_src, "<:<") == 0)    return INF; 
+  else if (strcmp(token_src, "<:") == 0)     return BSC;
   else if (strcmp(token_src, "@") == 0)      return ARG;
   else if (strcmp(token_src, "<|") == 0)     return CAL;
   else if (strcmp(token_src, "?") == 0)      return IF;
   else if (strcmp(token_src, "^") == 0)      return RET;
-  else if (strcmp(token_src,"[]")== 0 )      return LIT;
+  else if (strcmp(token_src, "[]")== 0 )     return LIT;
   else if (strcmp(token_src, "i32") == 0)    return I32;
   else if (strcmp(token_src, "i64") == 0)    return I64;
   else if (strcmp(token_src, "f32") == 0)    return F32;
@@ -41,40 +46,51 @@ TokenType to_token(const String token_src) {
  
 
   // operator / assign
-  else if (strcmp(token_src, "<-") == 0)     return ASSIGN;
+  else if (strcmp(token_src, "<-") == 0)     return ASG;
 
   // operator/arthimatic
-  else if (strcmp(token_src, "+") == 0)      return PLUS;
-  else if (strcmp(token_src, "-") == 0)      return MINUS;
+  else if (strcmp(token_src, "+") == 0)      return PLS;
+  else if (strcmp(token_src, "-") == 0)      return MNS;
   else if (strcmp(token_src, "*") == 0)      return MUL;
   else if (strcmp(token_src, "/") == 0)      return DIV;
   else if (strcmp(token_src, "++") == 0)     return INC; 
   else if (strcmp(token_src, "--") == 0)     return DEC;
 
-  // operator/logical
+  // operator/relational
   else if (strcmp(token_src, ">") == 0)      return MT;
   else if (strcmp(token_src, "<") == 0)      return LT;
   else if (strcmp(token_src, ">=") == 0)     return MTE;
   else if (strcmp(token_src, "<=") == 0)     return LTE;
+  else if (strcmp(token_src, "==") == 0)     return EQU;
+  else if (strcmp(token_src, "!=") == 0)     return NEQ; 
+
+  // operator/logical
   else if (strcmp(token_src, "!") == 0)      return NOT;
   else if (strcmp(token_src, "/\\") == 0)    return AND;
   else if (strcmp(token_src, "\\/") == 0)    return OR;
-  else if (strcmp(token_src, "==") == 0)     return EQU;
-  else if (strcmp(token_src, "!=") == 0)     return NEQU; 
+
+  //operator/bitwise
+  else if (strcmp(token_src, "~") == 0)      return BNT;
+  else if (strcmp(token_src, "&") == 0)      return BND;
+  else if (strcmp(token_src, "|") == 0)      return BOR;
+  else if (strcmp(token_src, "^|") == 0)     return XOR;
+  else if (strcmp(token_src, "<<") == 0)     return SHL;
+  else if (strcmp(token_src, ">>") == 0)     return SHR;
+
   // operator/somthing
   else if (strcmp(token_src, "<-:")==0)      return IN;
 
   // puncutations
-  else if (strcmp(token_src, "->") == 0)     return FLW_ARR;
-  else if (strcmp(token_src, ";") == 0)      return SEMI;
+  else if (strcmp(token_src, "->") == 0)     return ARW;
+  else if (strcmp(token_src, ";") == 0)      return SMI;
   else if (strcmp(token_src, "{") == 0)      return OCR;
   else if (strcmp(token_src, "}") == 0)      return CCR;
-  else if (strcmp(token_src, ",") == 0)      return COMMA;
+  else if (strcmp(token_src, ",") == 0)      return CMA;
   else if (strcmp(token_src, ".") == 0)      return DOT;
   else if (strcmp(token_src, "\n") == 0)     return NL;
   
 
-  else if (isdigit(*token_src)) return INTGER;
+  else if (isdigit(*token_src)) return INT;
   else if (isalpha(*token_src)) return ID;
 
 
@@ -130,10 +146,7 @@ int extr(char chr) {
 }
 
 int is_pucuation(char chr){
-  if(chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == ';') {
-    return 1;
-  }
-  return 0;
+  return (chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == ';');
 }
 
 int reverse_puc(char chr) {
@@ -149,7 +162,6 @@ void tokenize(lexer *src) { // make this return list of tokens somehow
       push_Token_node(&(src->m_res),&tok);
     } else if (isdigit(peek_char(src, 0))) {
       Token_node token_test = ret_token(src,numa,0);
-       
       push_Token_node(&(src->m_res),&token_test);
     } else if (is_pucuation(peek_char(src,0))){
       Token_node token_test = ret_token(src,reverse_puc,-1);

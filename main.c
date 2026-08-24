@@ -23,6 +23,11 @@ int main(int argc, char* argv[]) {
     .src = content,
     .m_res = NULL 
   };
+  parser tokens = {
+    .m_buf = NULL,
+    .lexer_src = ,
+    .m_res = NULL,
+  };
   if(0) {
     TokenType a = to_token(";");
     printf("%d\n----\n", a);
@@ -34,7 +39,7 @@ int main(int argc, char* argv[]) {
     return 0;
   }
   tokenize(&src);
-  //parser(&src);
+  Parsing(&src);
   free(src.src.src);
   return 0;
 }

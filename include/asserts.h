@@ -2,17 +2,23 @@
 #include<stdio.h>
 #include<stdlib.h>
 #define ASSERTS_H
+
 typedef enum {
   // Keywords
-  FUNC=0,  // <-@->
-  LOP, // <-?->
-  FEL, // <-:-> 
-  LST,  // <-[]->
-  ARG, // @  
-  CAL, // <|
-  IF, // ?
-  RET, // ^
-  LIT, //[]
+  FUN=100,  // <-@->
+  LOP,       // <-?->
+  FEL,       // <-:-> 
+  LST,       // <-[]->
+  STC,       // <<|>>
+  ENM,       // <-|->
+  CLS,       // <-<:->
+  INF,       // <:<
+  BSC,       // <:
+  ARG,       // @  
+  CAL,       // <|
+  IF,        // ?
+  RET,       // ^
+  LIT,       // []
   I32,
   I64,
   F32,
@@ -20,46 +26,59 @@ typedef enum {
   U8,
     
   // operator/assign
-  ASSIGN, // <-
+  ASG=200,   // <-
   // operator/arthimatic
-  PLUS,
-  MINUS,
+  MNS = 220,
+  PLS,
   MUL,
   DIV,
-  INC, // ++
-  DEC, // -- 
+  INC,       // ++
+  DEC,       // -- 
+  // operator/relational
+  MT = 240,  // >
+  LT,        // <
+  MTE,       // >=
+  LTE,       // <=
+  EQU,       // ==
+  NEQ,      // !=
   // operator/logical
-  MT, // >
-  LT, // <
-  MTE, // >=
-  LTE,  // <=
-  NOT,      // !
-  AND, //   /\   /
-  OR,   // \/
-  EQU,  // ==
-  NEQU, // !=
-  //some operator
-  IN,  // <-:
+  NOT = 260, // !
+  AND,       // /\ /
+  OR,        // \/
+  // operator/bitwise
+  BNT = 280,       // ~
+  BND,       // &
+  BOR,       // | 
+  XOR,       // ^|
+  SHL,       // <<
+  SHR,       // >>
+  // operator/membership
+  IN = 290,  // <-:
+  // operator/unary
+  PMS, 
+  // operator/member_access
+  DOT,       // .
+  // operator/type_cast
+  // (int), (float)
 
   //puctation
-  FLW_ARR, // ->
-  SEMI, //;
-  OCR, CCR, // { }
-  COMMA, //,
-  DOT,   // .
-  NL, // \n
+  ARW=300,   // ->
+  SMI,       // ;
+  OCR, CCR,  // { }
+  CMA,       // ,
+  NL,        // \n
 
   // liter 
-  INTGER,
-  FLOAT,
-  CHAR,
+  INT = 400,
+  FLT,
+  CHR,
 
   NULL_,
 
   COLLECTION,
   
   //identifer
-  ID 
+  ID = 500 
 } TokenType;
 
 #define LINKED_LIST(type, name)      \
@@ -110,11 +129,6 @@ typedef struct {
   size_t len;
 } src_code;
 
-/*typedef struct token_raw {
-  TokenType type;
-  struct token_raw *n_token;
-} Token;
-*/
 typedef struct {
   chr_node *m_buf; 
   size_t m_index;
@@ -123,8 +137,21 @@ typedef struct {
 } lexer;
 
 typedef struct {
+  union {
+    struct Expr *t;
+    struct Token_node *nt;
+  } op1;
+  Token_node *op;
+  union {
+    struct Expr *t;
+    struct Token_node *nt;
+  } op2;
+} Expr;
+
+typedef struct {
   Token_node *m_buf; 
-  lexer lexer_src;
+  lexer *lexer_list;
+  expr *m_res;
 } parser;
 
 void printE_impl(CString func,CString file,int line, CString message, ...);
