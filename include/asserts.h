@@ -3,84 +3,6 @@
 #include<stdlib.h>
 #define ASSERTS_H
 
-typedef enum {
-  // Keywords
-  FUN=100,  // <-@->
-  LOP,       // <-?->
-  FEL,       // <-:-> 
-  LST,       // <-[]->
-  STC,       // <<|>>
-  ENM,       // <-|->
-  CLS,       // <-<:->
-  INF,       // <:<
-  BSC,       // <:
-  ARG,       // @  
-  CAL,       // <|
-  IF,        // ?
-  RET,       // ^
-  LIT,       // []
-  I32,
-  I64,
-  F32,
-  F64,
-  U8,
-    
-  // operator/assign
-  ASG=200,   // <-
-  // operator/arthimatic
-  MNS = 220,
-  PLS,
-  MUL,
-  DIV,
-  INC,       // ++
-  DEC,       // -- 
-  // operator/relational
-  MT = 240,  // >
-  LT,        // <
-  MTE,       // >=
-  LTE,       // <=
-  EQU,       // ==
-  NEQ,      // !=
-  // operator/logical
-  NOT = 260, // !
-  AND,       // /\ /
-  OR,        // \/
-  // operator/bitwise
-  BNT = 280,       // ~
-  BND,       // &
-  BOR,       // | 
-  XOR,       // ^|
-  SHL,       // <<
-  SHR,       // >>
-  // operator/membership
-  IN = 290,  // <-:
-  // operator/unary
-  PMS, 
-  // operator/member_access
-  DOT,       // .
-  // operator/type_cast
-  // (int), (float)
-
-  //puctation
-  ARW=300,   // ->
-  SMI,       // ;
-  OCR, CCR,  // { }
-  CMA,       // ,
-  NL,        // \n
-
-  // liter 
-  INT = 400,
-  FLT,
-  CHR,
-
-  NULL_,
-
-  COLLECTION,
-  
-  //identifer
-  ID = 500 
-} TokenType;
-
 #define LINKED_LIST(type, name)      \
 typedef struct name {          \
   type val;                    \
@@ -121,7 +43,7 @@ static void show_item_##name(name *n) { \
 
 LINKED_LIST(char,chr_node);
 LINKED_LIST(TokenType,Token_node);
-       //
+
 typedef char *String;
 typedef const char *CString;
 typedef struct {
@@ -135,18 +57,6 @@ typedef struct {
   src_code src;
   Token_node *m_res; // linked list of tokens
 } lexer;
-
-typedef struct {
-  union {
-    struct Expr *t;
-    struct Token_node *nt;
-  } op1;
-  Token_node *op;
-  union {
-    struct Expr *t;
-    struct Token_node *nt;
-  } op2;
-} Expr;
 
 typedef struct {
   Token_node *m_buf; 

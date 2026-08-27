@@ -10,27 +10,27 @@
 
 <lp_stm> ::= "<-?->" "{" E | ( <assign_stm> ("," <assign_stm>)* ) ";" <expr> | E ";" E | (<expr> | ( <expr> ",")) "}" <arrow> <block>
 
-<do_lp_stm> ::= <block> <arrow> "<-?->" {" E | ( <assign_stm> ("," <assign_stm>)* ) ";" <expr> | E ";" E | (<expr> | ( <expr> ",")) "}"
+<do_lp_stm> ::= <block> <arrow> "<-?->" {" E | ( <assign_stm> ("," <assign_stm>)* ) ";" <expr> | E ";" E | (<expr> | <expr> ( <expr> ",")* ) "}"
 
 <for_each_loop> ::= "<-:->" "{" <type> <identifer> "<-:" <identifer> "}" <arrow> <block>
 
-<function_call> ::= <identifer> "<|" "{" (<expr> | <> ) | E "}"
+<function_call> ::= <identifer> "<|" "{" (<expr> ("," <expr>)* ("," <identifer> <op/assign> <expr>)* ) | E  "}" ";"
 
 <block> ::= "{" (<compound_stm>)* "}"
 
 <assign/variable> ::= <type> <identifer> <op/assign> <expr> ";"
 
-<assign/array> ::= "<-[]->" "{" <type>  ( "," <type> )* "}"
+<assign/array> ::= "<-[]->" "{" <type>  ( "," <type> )* "}" ";"
 
-<assign/function> ::=
+<assign/function> ::= "<-@->" "{" <type> "}" <identifer> <op/assign> <block> ";"
 
-<assign/struct> ::=
+<assign/struct> ::= "<-<+>->" "{" "}" <identifer> <op/assign> "<+>" "{" "}" <arrow> "{" ( <assign_stm>* | E ) "}" ";"
 
-<assign/enum> ::=
+<assign/enum> ::= "<-<|>->" "{" "}" <identifer> <arrow> "<|>" "{" "}" <arrow> "{" ((<identifer> ((<op/assign>) | E)* "}" ";"
 
-<assign/class> ::=
+<assign/class> ::= "<-<:>->" "{" "}" <identifer> <arrow> "<:>" "{" ( <identifer> ("," <identifer> )* ) | E "}" <arrow> <block> ";"
 
-<type> ::=
+<type> ::= "i32" | "i64" | "f32" | "f64" | "u8"
 
 <expr> ::= <primary_expr> | <unary_expr> | <binary_expr> | <grouping>
 
@@ -39,7 +39,7 @@
 <grouping> ::= "(" <expr> ")"
 
 <unary_expr> ::= <op/prefix> ( <primary_expr> | "(" <unary_expr> ")" ) | 
-                ( <primary_expr> | "(" <unary_expr> ")" ) <op/prefix>|
+                ( <primary_expr> | "(" <unary_expr> ")" ) <op/prefix> |
                 <op/other> <grouping>
 
 <binary_expr> ::= <expr> <oprator> <expr>
@@ -79,7 +79,7 @@
 
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
-<STRING> ::= 
+<STRING> ::= """ (ascii_charaters)* """
 
 <arrow> ::= "->"
 

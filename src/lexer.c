@@ -36,7 +36,7 @@ TokenType to_token(const String token_src) {
   else if (strcmp(token_src, "@") == 0)      return ARG;
   else if (strcmp(token_src, "<|") == 0)     return CAL;
   else if (strcmp(token_src, "?") == 0)      return IF;
-  else if (strcmp(token_src, "^") == 0)      return RET;
+  else if (strcmp(token_src, "^^^") == 0)    return RET;
   else if (strcmp(token_src, "[]")== 0 )     return LIT;
   else if (strcmp(token_src, "i32") == 0)    return I32;
   else if (strcmp(token_src, "i64") == 0)    return I64;
@@ -73,7 +73,7 @@ TokenType to_token(const String token_src) {
   else if (strcmp(token_src, "~") == 0)      return BNT;
   else if (strcmp(token_src, "&") == 0)      return BND;
   else if (strcmp(token_src, "|") == 0)      return BOR;
-  else if (strcmp(token_src, "^|") == 0)     return XOR;
+  else if (strcmp(token_src, "^") == 0)     return XOR;
   else if (strcmp(token_src, "<<") == 0)     return SHL;
   else if (strcmp(token_src, ">>") == 0)     return SHR;
 

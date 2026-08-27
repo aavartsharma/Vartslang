@@ -18,7 +18,7 @@ i32 $$p2 <- &p1;
 
 <-@->{i32} name <- @{i32 x <- 0, i32 y <- 6} -> {
     ^ x + y; 
-}
+};
 
 i32 newvar = name<10,3>;
 <-@->{i32} func1 <- @{i32 x} -> x*2;
@@ -42,23 +42,23 @@ i32 newvar <- name <| {2,4};
 
 }
 
-<+> user <- +>{} -> {
+<-<+>->{} user <- <+>{} -> {
     i32 name <- 32;
     i32 class <- 3;
     i32 play <- 32;
 };
 #=> comment
-<-|-> color <- |->{} -> {
+<-<|>->{} color <- <|>{} -> {
     up <- 3,
     down,
     right,
     left
 };
 
-<<+>> player <- <+>{ class1, class2 } -> {
+<-<:>->{} player <- <:>{ class1, class2 } -> {
     <-@->{} name <- @{i32 x<-0, i32 y <- 0} {
         ^ x+y;
-    }
-}
+    };
+};
 
 
