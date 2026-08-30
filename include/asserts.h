@@ -19,7 +19,8 @@ static name *next_##name(name *cur){ \
 }     \
 static name *push_##name(name **cur,name *next_el) {\
   if(cur == NULL) { \
-    fprintf(stderr, "Node is NULL\n"); \
+    perror("Node is NULL\n"); \
+    exit(EXIT_FAILURE);
     return NULL; \
   } \
   if(*cur == NULL) {  \

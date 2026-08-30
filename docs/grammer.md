@@ -2,33 +2,43 @@
 
 <program> ::= (<compound_stm>)*
 
-<compound_stm> ::= <assign_stm> | <if_stm> | <lp_stm> | <do_lp_stm> | <for_each_loop> | <function_call>  
+<compound_stm> ::= <assign_stm> | <if_stm> | <lp_stm> | <do_lp_stm> | <for_each_loop> | <function_call_stm>  
 
 <assign_stm> ::= <assign/variable> | <assign/array> | <assign/function> | <assign/struct> | <assign/enum> | <assign/class>
 
-<if_stm> ::= "?" "{" <expr> "}" <arrow> <block> ( <arrow> "?" "{" <expr> "}" )* ( (<arrow> <block>) | E )
+<if_stm> ::= 
+    "?" "{" <expr> "}" <arrow> <block> 
+    ( <arrow> "?" "{" <expr> "}" <arrow> <block> )* 
+    ( (<arrow> <block>) | E )
 
-<lp_stm> ::= "<-?->" "{" E | ( <assign_stm> ("," <assign_stm>)* ) ";" <expr> | E ";" E | (<expr> | ( <expr> ",")) "}" <arrow> <block>
+<lp_stm> ::= 
+    "<-?->" "{" ( <assign_stm> ("," <assign_stm>)* ) | E ";" 
+    <expr> | E ";" 
+     (<expr> | ( <expr> ",")) | E "}" 
+    <arrow> <block>
 
-<do_lp_stm> ::= <block> <arrow> "<-?->" {" E | ( <assign_stm> ("," <assign_stm>)* ) ";" <expr> | E ";" E | (<expr> | <expr> ( <expr> ",")* ) "}"
+<do_lp_stm> ::= <block> <arrow> "<-?->" "{" 
+    E | ( <assign_stm> ("," <assign_stm>)* ) ";" 
+    <expr> | E ";" 
+    E | (<expr> | <expr> ( <expr> ",")* ) "}"
 
 <for_each_loop> ::= "<-:->" "{" <type> <identifer> "<-:" <identifer> "}" <arrow> <block>
 
-<function_call> ::= <identifer> "<|" "{" (<expr> ("," <expr>)* ("," <identifer> <op/assign> <expr>)* ) | E  "}" ";"
+<function_call_stm> ::= <function_call> ";"
 
 <block> ::= "{" (<compound_stm>)* "}"
 
-<assign/variable> ::= <type> <identifer> <op/assign> <expr> ";"
+<assign/variable> ::= <type> <identifer> (<op/assign> <expr> | E) ";"
 
-<assign/array> ::= "<-[]->" "{" <type>  ( "," <type> )* "}" ";"
+<assign/array> ::= "<-[]->" "{" <type>  ( "," <type> )* "}" (<op/assign> ) ";"
 
 <assign/function> ::= "<-@->" "{" <type> "}" <identifer> <op/assign> <block> ";"
 
-<assign/struct> ::= "<-<+>->" "{" "}" <identifer> <op/assign> "<+>" "{" "}" <arrow> "{" ( <assign_stm>* | E ) "}" ";"
+<assign/struct> ::= "<-<+>->" "{" "}" <identifer> <op/assign> "<+>" "{" "}" <op/assign> "{" ( <assign_stm>* ) "}" ";"
 
-<assign/enum> ::= "<-<|>->" "{" "}" <identifer> <arrow> "<|>" "{" "}" <arrow> "{" ((<identifer> ((<op/assign>) | E)* "}" ";"
+<assign/enum> ::= "<-<|>->" "{" "}" <identifer> <arrow> "<|>" "{" "}" <op/assign> "{" ((<identifer> ((<op/assign>) | E)* "}" ";"
 
-<assign/class> ::= "<-<:>->" "{" "}" <identifer> <arrow> "<:>" "{" ( <identifer> ("," <identifer> )* ) | E "}" <arrow> <block> ";"
+<assign/class> ::= "<-<:>->" "{" "}" <identifer> <arrow> "<:>" "{" ( <identifer> ("," <identifer> )* ) | E "}" <op/assign> <block> ";"
 
 <type> ::= "i32" | "i64" | "f32" | "f64" | "u8"
 
@@ -39,7 +49,7 @@
 <grouping> ::= "(" <expr> ")"
 
 <unary_expr> ::= <op/prefix> ( <primary_expr> | "(" <unary_expr> ")" ) | 
-                ( <primary_expr> | "(" <unary_expr> ")" ) <op/prefix> |
+                ( <primary_expr> | "(" <unary_expr> ")" ) <op/suffix> |
                 <op/other> <grouping>
 
 <binary_expr> ::= <expr> <oprator> <expr>
@@ -58,7 +68,7 @@
 
 <op/assign> ::= "<-"
 
-<op/arthimatic> ::= "+" | "-" | "*" | "/" | "%" |
+<op/arthimatic> ::= "+" | "-" | "*" | "/" | "%" 
 
 <op/logical> ::= "||" | "&&" | "!"
 
@@ -68,12 +78,14 @@
 
 <op/bitwise> ::= "~" | "&" | "^~^" | "|"
 
+<function_call> ::= <identifer> "<|" "{" (<expr> ("," <expr>)* ("," <identifer> <op/assign> <expr>)* ) | E  "}" ";"
 
 <primary_expr> ::= <literal> | <identifer> | <function_call>
 
 <literal> ::= <numral> | <STRING> | "true" | "false" | "NULL"
 
-<identifer> ::= ( "A" | "B" | ... | "Z" | "a" | "b" | ... | "z" | "_") ( "A" | "B" | ... | "Z" | "a" | "b" | ... | "z" | "_" | <digit>)*
+<identifer> ::= ( "A" | "B" | ... | "Z" | "a" | "b" | ... | "z" | "_") 
+                ( "A" | "B" | ... | "Z" | "a" | "b" | ... | "z" | "_" | <digit>)*
 
 <numral> ::= <digit> (<digit>)*
 

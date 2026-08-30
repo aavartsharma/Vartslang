@@ -84,7 +84,7 @@ typedef enum {
 */
 
 typedef enum {
-  FUN,       // <-@->
+  FUN = 100,       // <-@->
   LOP,       // <-?->
   FEL,       // <-:-> 
   LST,       // <-[]->
@@ -107,10 +107,18 @@ typedef enum {
 } keywords;
 
 typedef enum {
-  ASG=200   // <-
+  type_I32 = I32,
+  type_I64 = I64,
+  type_F32 = F32,
+  type_F64 = F64,
+  type_U8 = U8,
+} type;
+
+typedef enum {
+  ASG=200;   // <-
 } op_assign;
 
-typdef enum {
+typedef enum {
   MNS = 220,
   PLS,
   MUL,
@@ -148,7 +156,7 @@ typedef enum {
 } op_membership;
 
 typedef enum {
-  DOT       // .
+  DOT=295       // .
 } op_member_access;
 
 typedef enum {
@@ -216,9 +224,30 @@ typedef struct {
   Expr oprand2;
 } binary_expr;
 
-typedef struct {
-  op_unary
-}
+typedef union unary_expr {
+  struct {
+    op_unary op; 
+    union {
+      primary_expr 
+      unary_expr 
+    } s;   
+  };
+  struct {
+    union {
+      unary_expr
+      primary_expr
+    } n; 
+    op_unary op;
+  };
+  struct {
+    op_unary 
+    grouping
+  };
+} ;
+
+typedef union grouping {
+  Expr
+} ;
 
 typedef union {
   struct primary_expr; 
@@ -228,7 +257,7 @@ typedef union {
 } Expr;
 
 typedef struct {
-  
-} ;
+  type
+} assign_variable;
 
 #endif

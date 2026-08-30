@@ -16,21 +16,20 @@ char peek_char(lexer *src, int offset) {
 char consume_char(lexer *src) {
   // return the charater at m_index and increment
   // the index by one
-  if (src->m_index >= src->src.len)
-    return '\0';
+  if (src->m_index >= src->src.len) return '\0';
   src->m_index++;
   return *(src->src.src + src->m_index - 1);
 }
 
 TokenType to_token(const String token_src) {
   // Keyword
-  if (strcmp(token_src, "<-@->") == 0)       return FUN;
+  if      (strcmp(token_src, "<-@->") == 0)  return FUN;
   else if (strcmp(token_src, "<-?->") == 0)  return LOP;
   else if (strcmp(token_src, "<-:->") == 0)  return FEL;
   else if (strcmp(token_src, "<-[]->") == 0) return LST;
-  else if (strcmp(token_src, "<<|>>") == 0)  return STC;
-  else if (strcmp(token_src, "<-|->") == 0)  return ENM;
-  else if (strcmp(token_src, "<-<:->") == 0) return CLS;
+  else if (strcmp(token_src, "<-<+>->") == 0)return STC;
+  else if (strcmp(token_src, "<-<|>->") == 0)return ENM;
+  else if (strcmp(token_src, "<-<:>->") == 0)return CLS;
   else if (strcmp(token_src, "<:<") == 0)    return INF; 
   else if (strcmp(token_src, "<:") == 0)     return BSC;
   else if (strcmp(token_src, "@") == 0)      return ARG;
@@ -73,7 +72,7 @@ TokenType to_token(const String token_src) {
   else if (strcmp(token_src, "~") == 0)      return BNT;
   else if (strcmp(token_src, "&") == 0)      return BND;
   else if (strcmp(token_src, "|") == 0)      return BOR;
-  else if (strcmp(token_src, "^") == 0)     return XOR;
+  else if (strcmp(token_src, "^") == 0)      return XOR;
   else if (strcmp(token_src, "<<") == 0)     return SHL;
   else if (strcmp(token_src, ">>") == 0)     return SHR;
 
@@ -105,14 +104,13 @@ Token_node ret_token(lexer *src, int (*fun)(char), int offset) {
   int lenght = 0;
   chr_node **temp_ptr = &(src->m_buf); 
   for (int i = 0;fun(peek_char(src,offset));i++) {
-    if (i > 17)
-      break;
+    if (i > 17) break;
     printf("peeky: %c\n", peek_char(src, 0));
     char temp_char_var = consume_char(src);
     push_chr_node(temp_ptr,new_chr_node(temp_char_var));
     lenght++;
   }
-  String str_buf = (char *)malloc((lenght * sizeof(char)) + 1);
+  String str_buf = (String) malloc((lenght * sizeof(char)) + 1);
   for (int i = 0; src->m_buf != NULL; i++) {
     *(str_buf + i) = src->m_buf->val; //
     src->m_buf = next_chr_node(src->m_buf);
@@ -135,18 +133,39 @@ Token_node ret_token(lexer *src, int (*fun)(char), int offset) {
   return a;
 }
 
-int alpha(char chr){
-  return isalpha(chr) || isdigit(chr) || chr == '_';
+int alpha(char chr) {
+  return (
+    isalpha(chr) || 
+    isdigit(chr) || 
+    chr == '_'
+  );
 }
+
 int numa(char chr) {
-  return isdigit(chr) || chr == '_';
+  return (
+    isdigit(chr) || 
+    chr == '_'
+  );
 }
+
 int extr(char chr) {
-  return (chr != ' ' && !isdigit(chr) && !isalpha(chr) && !is_pucuation(chr));
+  return !(
+    chr == ' ' ||
+    isdigit(chr) ||
+    isalpha(chr) ||
+    is_pucuation(chr)
+  );
 }
 
 int is_pucuation(char chr){
-  return (chr ==';' || chr == '{' || chr == '}' || chr == ',' || chr == '.' || chr == ';');
+  return (
+    chr == ';' || 
+    chr == '{' || 
+    chr == '}' || 
+    chr == ',' || 
+    chr == '.' || 
+    chr == ';'
+  );
 }
 
 int reverse_puc(char chr) {
