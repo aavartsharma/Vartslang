@@ -1,66 +1,8 @@
 #ifndef ASSERTS_H
 #include<stdio.h>
 #include<stdlib.h>
+#include "grammer.h"
 #define ASSERTS_H
-typedef enum {
-  // Keywords
-  FUNC=0,  // <-@->
-  LOP, // <-?->
-  FEL, // <-:-> 
-  LST,  // <-[]->
-  ARG, // @  
-  CAL, // <|
-  IF, // ?
-  RET, // ^
-  LIT, //[]
-  I32,
-  I64,
-  F32,
-  F64,
-  U8,
-    
-  // operator/assign
-  ASSIGN, // <-
-  // operator/arthimatic
-  PLUS,
-  MINUS,
-  MUL,
-  DIV,
-  INC, // ++
-  DEC, // -- 
-  // operator/logical
-  MT, // >
-  LT, // <
-  MTE, // >=
-  LTE,  // <=
-  NOT,      // !
-  AND, //   /\   /
-  OR,   // \/
-  EQU,  // ==
-  NEQU, // !=
-  //some operator
-  IN,  // <-:
-
-  //puctation
-  FLW_ARR, // ->
-  SEMI, //;
-  OCR, CCR, // { }
-  COMMA, //,
-  DOT,   // .
-  NL, // \n
-
-  // liter 
-  INTGER,
-  FLOAT,
-  CHAR,
-
-  NULL_,
-
-  COLLECTION,
-  
-  //identifer
-  ID 
-} TokenType;
 
 #define LINKED_LIST(type, name)      \
 typedef struct name {          \
@@ -78,7 +20,8 @@ static name *next_##name(name *cur){ \
 }     \
 static name *push_##name(name **cur,name *next_el) {\
   if(cur == NULL) { \
-    fprintf(stderr, "Node is NULL\n"); \
+    perror("Node is NULL\n"); \
+    exit(EXIT_FAILURE); \
     return NULL; \
   } \
   if(*cur == NULL) {  \
@@ -100,21 +43,29 @@ static void show_item_##name(name *n) { \
   show_item_##name(next_##name(n)); \
 } \
 
+// type, identifer
 LINKED_LIST(char,chr_node);
-LINKED_LIST(TokenType,Token_node);
-       //
+
 typedef char *String;
 typedef const char *CString;
+
 typedef struct {
   String src; 
   size_t len;
 } src_code;
 
-/*typedef struct token_raw {
+typedef struct {
+  TokenName tok;
   TokenType type;
-  struct token_raw *n_token;
+  union {
+    int numral_value; 
+    String str_value;
+    int is_null;
+  } value; 
 } Token;
-*/
+
+LINKED_LIST(Token,Token_node);
+
 typedef struct {
   chr_node *m_buf; 
   size_t m_index;
@@ -122,10 +73,14 @@ typedef struct {
   Token_node *m_res; // linked list of tokens
 } lexer;
 
-typedef struct {
-  Token_node *m_buf; 
-  lexer lexer_src;
-} parser;
+typedef struct Parser {
+  Token_node *m_buf;
+  Token (*peek)(struct Parser*,int);
+  int (*peekFor)(struct Parser*, int);
+  Token (*consume)(struct Parser*);
+  int (*TryConsume)(struct Parser*,int);
+  Program *m_res;
+} Parser;
 
 void printE_impl(CString func,CString file,int line, CString message, ...);
 
