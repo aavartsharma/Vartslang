@@ -2,6 +2,9 @@
 <+$+> math;
 <+$+> gameengine.name;
 
+<-@$|\/|->{
+    // assembly code here 
+};
 
 i32 y <- 0;
 i32 $p1 <- &y;
