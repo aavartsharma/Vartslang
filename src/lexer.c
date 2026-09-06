@@ -23,85 +23,86 @@ char consume_char(lexer *src) {
 
 Token to_token(const String token_src) {
   // Keyword
-  if      (strcmp(token_src, "<-@->") == 0)     return (Token){F32,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<-?->") == 0)     return (Token){LOP,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<-:->") == 0)     return (Token){FEL,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<-[]->") == 0)    return (Token){LST,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<-<+>->") == 0)   return (Token){STC,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<-<|>->") == 0)   return (Token){ENM,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<-<:>->") == 0)   return (Token){CLS,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<:<") == 0)       return (Token){INF,KEYWORD,{.is_null = NULL}}; 
-  else if (strcmp(token_src, "<:") == 0)        return (Token){BSC,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "@") == 0)         return (Token){ARG,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "<|") == 0)        return (Token){CAL,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "?") == 0)         return (Token){IF,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "^^^") == 0)       return (Token){RET,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "[]")== 0 )        return (Token){LIT,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "i32") == 0)       return (Token){I32,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "i64") == 0)       return (Token){I64,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "f32") == 0)       return (Token){F32,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "f64") == 0)       return (Token){F64,KEYWORD,{.is_null = NULL}};
-  else if (strcmp(token_src, "u8") == 0)        return (Token){U8,KEYWORD,{.is_null = NULL}};
+  if      (strcmp(token_src, "<-@->") == 0)     return (Token){F32,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<-?->") == 0)     return (Token){LOP,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<-:->") == 0)     return (Token){FEL,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<-[]->") == 0)    return (Token){LST,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<-<+>->") == 0)   return (Token){STC,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<-<|>->") == 0)   return (Token){ENM,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<-<:>->") == 0)   return (Token){CLS,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "@") == 0)         return (Token){ARG,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<|") == 0)        return (Token){CAL,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "?") == 0)         return (Token){IF, KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "^^^") == 0)       return (Token){RET,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "[]")== 0 )        return (Token){LIT,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<+>")== 0 )       return (Token){STA,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<|>")== 0 )       return (Token){ENA,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<:>")== 0 )       return (Token){ITA,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "i32") == 0)       return (Token){I32,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "i64") == 0)       return (Token){I64,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "f32") == 0)       return (Token){F32,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "f64") == 0)       return (Token){F64,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "u8") == 0)        return (Token){U8, KEYWORD,1,{NULL}};
  
 
   // operator / assign
-  else if (strcmp(token_src, "<-") == 0)        return (Token){ASG,OP_ASSIGN,{.is_null = NULL}};
+  else if (strcmp(token_src, "<-") == 0)        return (Token){ASG,OP_ASSIGN,1,{ NULL}};
 
   // operator/arthimatic
-  else if (strcmp(token_src, "+") == 0)         return (Token){PLS,OP_ARTHIMATIC,{.is_null = NULL}};
-  else if (strcmp(token_src, "-") == 0)         return (Token){MNS,OP_ARTHIMATIC,{.is_null = NULL}};
-  else if (strcmp(token_src, "*") == 0)         return (Token){MUL,OP_ARTHIMATIC,{.is_null = NULL}};
-  else if (strcmp(token_src, "/") == 0)         return (Token){DIV,OP_ARTHIMATIC,{.is_null = NULL}};
-  else if (strcmp(token_src, "++") == 0)        return (Token){INC,OP_ARTHIMATIC,{.is_null = NULL}}; 
-  else if (strcmp(token_src, "--") == 0)        return (Token){DEC,OP_ARTHIMATIC,{.is_null = NULL}};
+  else if (strcmp(token_src, "+") == 0)         return (Token){PLS,OP_ARTHIMATIC,1,{NULL}};
+  else if (strcmp(token_src, "-") == 0)         return (Token){MNS,OP_ARTHIMATIC,1,{NULL}};
+  else if (strcmp(token_src, "*") == 0)         return (Token){MUL,OP_ARTHIMATIC,1,{NULL}};
+  else if (strcmp(token_src, "/") == 0)         return (Token){DIV,OP_ARTHIMATIC,1,{NULL}};
+  else if (strcmp(token_src, "++") == 0)        return (Token){INC,OP_ARTHIMATIC,1,{NULL}}; 
+  else if (strcmp(token_src, "--") == 0)        return (Token){DEC,OP_ARTHIMATIC,1,{NULL}};
 
   // operator/relational
-  else if (strcmp(token_src, ">") == 0)         return (Token){MT,OP_RELATIONAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "<") == 0)         return (Token){LT,OP_RELATIONAL,{.is_null = NULL}};
-  else if (strcmp(token_src, ">=") == 0)        return (Token){MTE,OP_RELATIONAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "<=") == 0)        return (Token){LTE,OP_RELATIONAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "==") == 0)        return (Token){EQU,OP_RELATIONAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "!=") == 0)        return (Token){NEQ,OP_RELATIONAL,{.is_null = NULL}}; 
+  else if (strcmp(token_src, ">") == 0)         return (Token){GT ,OP_RELATIONAL,1,{NULL}};
+  else if (strcmp(token_src, "<") == 0)         return (Token){LT ,OP_RELATIONAL,1,{NULL}};
+  else if (strcmp(token_src, ">=") == 0)        return (Token){GTE,OP_RELATIONAL,1,{NULL}};
+  else if (strcmp(token_src, "<=") == 0)        return (Token){LTE,OP_RELATIONAL,1,{NULL}};
+  else if (strcmp(token_src, "==") == 0)        return (Token){EQU,OP_RELATIONAL,1,{NULL}};
+  else if (strcmp(token_src, "!=") == 0)        return (Token){NEQ,OP_RELATIONAL,1,{NULL}}; 
 
   // operator/logical
-  else if (strcmp(token_src, "!") == 0)         return (Token){NOT,OP_LOGICAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "/\\") == 0)       return (Token){AND,OP_LOGICAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "\\/") == 0)       return (Token){OR,OP_LOGICAL,{.is_null = NULL}};
+  else if (strcmp(token_src, "!") == 0)         return (Token){NOT,OP_LOGICAL,1,{NULL}};
+  else if (strcmp(token_src, "/\\") == 0)       return (Token){AND,OP_LOGICAL,1,{NULL}};
+  else if (strcmp(token_src, "\\/") == 0)       return (Token){OR ,OP_LOGICAL,1,{NULL}};
 
   //operator/bitwise
-  else if (strcmp(token_src, "~") == 0)         return (Token){BNT,OP_BITWISE,{.is_null = NULL}};
-  else if (strcmp(token_src, "&") == 0)         return (Token){BND,OP_BITWISE,{.is_null = NULL}};
-  else if (strcmp(token_src, "|") == 0)         return (Token){BOR,OP_BITWISE,{.is_null = NULL}};
-  else if (strcmp(token_src, "^") == 0)         return (Token){XOR,OP_BITWISE,{.is_null = NULL}};
-  else if (strcmp(token_src, "<<") == 0)        return (Token){SHL,OP_BITWISE,{.is_null = NULL}};
-  else if (strcmp(token_src, ">>") == 0)        return (Token){SHR,OP_BITWISE,{.is_null = NULL}};
+  else if (strcmp(token_src, "~") == 0)         return (Token){BNT,OP_BITWISE,1,{NULL}};
+  else if (strcmp(token_src, "&") == 0)         return (Token){BND,OP_BITWISE,1,{NULL}};
+  else if (strcmp(token_src, "|") == 0)         return (Token){BOR,OP_BITWISE,1,{NULL}};
+  else if (strcmp(token_src, "^") == 0)         return (Token){XOR,OP_BITWISE,1,{NULL}};
+  else if (strcmp(token_src, "<<") == 0)        return (Token){SHL,OP_BITWISE,1,{NULL}};
+  else if (strcmp(token_src, ">>") == 0)        return (Token){SHR,OP_BITWISE,1,{NULL}};
 
   // operator/membership
-  else if (strcmp(token_src, "<-:")==0)         return (Token){IN,OP_MEMBERSHIP,{.is_null = NULL}};
+  else if (strcmp(token_src, "<-:")==0)         return (Token){IN,OP_MEMBERSHIP,1,{NULL}};
 
   // operator/member access
-  else if (strcmp(token_src, ".") == 0)         return (Token){DOT,OP_MEMBER_ACCESS,{.is_null = NULL}};
+  else if (strcmp(token_src, ".") == 0)         return (Token){DOT,OP_MEMBER_ACCESS,1,{NULL}};
 
   // puncutations
-  else if (strcmp(token_src, "->") == 0)        return (Token){ARW,PUNCTATION,{.is_null = NULL}};
-  else if (strcmp(token_src, ";") == 0)         return (Token){SMI,PUNCTATION,{.is_null = NULL}};
-  else if (strcmp(token_src, "{") == 0)         return (Token){OCR,PUNCTATION,{.is_null = NULL}};
-  else if (strcmp(token_src, "}") == 0)         return (Token){CCR,PUNCTATION,{.is_null = NULL}};
-  else if (strcmp(token_src, ",") == 0)         return (Token){CMA,PUNCTATION,{.is_null = NULL}};
-  else if (strcmp(token_src, "\n") == 0)        return (Token){NL,PUNCTATION,{.is_null = NULL}};
+  else if (strcmp(token_src, "->") == 0)        return (Token){ARW,PUNCTATION,1,{NULL}};
+  else if (strcmp(token_src, ";") == 0)         return (Token){SMI,PUNCTATION,1,{NULL}};
+  else if (strcmp(token_src, "{") == 0)         return (Token){OCR,PUNCTATION,1,{NULL}};
+  else if (strcmp(token_src, "}") == 0)         return (Token){CCR,PUNCTATION,1,{NULL}};
+  else if (strcmp(token_src, ",") == 0)         return (Token){CMA,PUNCTATION,1,{NULL}};
+  else if (strcmp(token_src, "\n") == 0)        return (Token){NL ,PUNCTATION,1,{NULL}};
   
   //literals
-  else if (isdigit(*token_src))                 return (Token){INT,LITERAL,{.numral_value = atoi(token_src)}};
-  else if (strcmp(token_src, "true") == 0)      return (Token){TRU,LITERAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "false") == 0)     return (Token){FLS,LITERAL,{.is_null = NULL}};
-  else if (strcmp(token_src, "null") == 0)      return (Token){NULL_,LITERAL,{.is_null = NULL}};
+  else if (isdigit(*token_src))                 return (Token){INT,LITERAL,0,{.numral_value = atoi(token_src)}};
+  else if (strcmp(token_src, "true") == 0)      return (Token){TRU,LITERAL,0,{.numral_value = 1}};
+  else if (strcmp(token_src, "false") == 0)     return (Token){FLS,LITERAL,0,{.numral_value= 0}};
+  else if (strcmp(token_src, "null") == 0)      return (Token){NULL_,LITERAL,0,{NULL}};
 
-  else if (isalpha(*token_src))                 return (Token){ID, IDENTIFER, {.str_value = NULL}};
+  else if (isalpha(*token_src))                 return (Token){ID, IDENTIFER,0, {.str_value = token_src}};
 
   else {
     printf("lexer.c to_token function: unknown token %s, %d, %d\n", token_src,*token_src,*(token_src+1));
     exit(-1);
-    return -1; // make sure you define this
+    return (Token){0,0,0,{NULL}}; // make sure you define this
   }
 }
 
@@ -148,15 +149,6 @@ int numa(char chr) {
   );
 }
 
-int extr(char chr) {
-  return !(
-    chr == ' ' ||
-    isdigit(chr) ||
-    isalpha(chr) ||
-    is_pucuation(chr)
-  );
-}
-
 int is_pucuation(char chr){
   return (
     chr == ';' || 
@@ -167,6 +159,16 @@ int is_pucuation(char chr){
     chr == ';'
   );
 }
+int extr(char chr) {
+  return !(
+    chr == ' ' ||
+    isdigit(chr) ||
+    isalpha(chr) ||
+    is_pucuation(chr)
+  );
+}
+
+
 
 int reverse_puc(char chr) {
   return !is_pucuation(chr);

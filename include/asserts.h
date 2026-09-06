@@ -57,10 +57,10 @@ typedef struct {
 typedef struct {
   TokenName tok;
   TokenType type;
+  int is_null;
   union {
-    int numral_value; 
     String str_value;
-    int is_null;
+    int numral_value; 
   } value; 
 } Token;
 

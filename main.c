@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "file.h"
 #include "asserts.h"
 #include "lexer.h"
@@ -26,26 +27,16 @@ int main(int argc, char* argv[]) {
     .m_res = NULL 
   };
 
-  if(0) {
-    TokenType a = to_token(";");
-    printf("%d\n----\n", a);
-    Token_node aa = {
-      .val = a,
-      .next_el = NULL
-    };
-    //printf("%d\n", (src.m_res)->type);
-    return 0;
-  }
   tokenize(&src);
   Parser tokens = {
-    .m_buf = src->m_res,
+    .m_buf = src.m_res,
     .peek = &peek_token,
-    .peekFor = &peekFor,
+    .peekFor = &peekFor_token,
     .consume = &consume_token,
-    .TryConsume = &TryConsume,
+    .TryConsume = &TryConsume_token,
     .m_res = NULL,
   };
-  Parsing(&tokens);
+  Parse(&tokens);
   free(src.src.src);
   return 0;
 }

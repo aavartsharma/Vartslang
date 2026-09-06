@@ -43,11 +43,9 @@ typedef struct {
 */
 
 // char *current_pos;
-expression* create_expression(Parser *parser, int right_bp);
-void display(expression* a , int indent){
+expression* create_expression(Parser *parser, int right_bp, TokenName stopAt);
 
-}
-Token peek_token(Parser *parser,int offset)  // front
+Token peek_token(struct Parser *parser,int offset)  // front
 {
   Token_node *temp = parser->m_buf;
   for (int i = offset; i < offset; i--){
@@ -56,22 +54,24 @@ Token peek_token(Parser *parser,int offset)  // front
   return temp->val;
 }
 
-int peekFor_token(Parser *parser,int lookingFor)
+int peekFor_token(struct Parser *parser,int lookingFor)
 {
   Token temp = parser->peek(parser,0);
   return temp.tok == (TokenName) lookingFor || temp.type == (TokenType) lookingFor;
 }
 
-void consume_token(Parser *parser)    // advance
+Token consume_token(struct Parser *parser)    // advance
 {
   if(parser->m_buf->val.tok == EOF_) {
     printE("end of tokens");
-    return;
+    return (Token){0,0,0,{NULL}};
   }
+  Token *temp = &(parser->m_buf->val); 
   parser->m_buf = parser->m_buf->next_el;
+  return *temp;
 }
 
-int TryConsume_token(Parser *parser, TokenName o)
+int TryConsume_token(struct Parser *parser, int o)
 {
   if(parser->peekFor(parser,o)) {
     // consume_token();
@@ -140,7 +140,8 @@ int number_evaluate(expression* s)
 {
   number_literal* self = (number_literal*)s;
   // add logic 
-  return 23;
+  //number_literal
+  return self->number.value.numral_value;
 }
 
 int prefix_expression_evaluate(expression* s) 
@@ -217,7 +218,6 @@ int infix_expression_evaluate(expression* s)
 expression* create_number_literal(Parser *parser) 
 {
   number_literal* result = malloc(sizeof(number_literal));
-  result->base.display = &number_display;
   result->base.evaluate = &number_evaluate;
 
   result->number = parser->consume(parser);
@@ -229,7 +229,6 @@ expression* create_number_literal(Parser *parser)
 expression* create_variable_literal(Parser *parser) 
 {
   variable_literal* result = malloc(sizeof(variable_literal));
-  result->base.display = &variable_display;
   result->base.evaluate = &variable_evaluate;
 
   result->var = parser->consume(parser);
@@ -241,7 +240,6 @@ expression* create_variable_literal(Parser *parser)
 expression* create_sub_expression(Parser *parser) 
 {
   sub_expression* result = malloc(sizeof(sub_expression));
-  result->base.display = &sub_expression_display;
   result->base.evaluate = &sub_expression_evaluate;
   if (!parser->peekFor(parser,OCR)) {
     // Should do error handling!
@@ -249,7 +247,7 @@ expression* create_sub_expression(Parser *parser)
   }
   parser->consume(parser);
   // advance();
-  result->body = create_expression(parser,0);
+  result->body = create_expression(parser,0, SMI);
   if (!parser->peekFor(parser,OCR)) {
     // Should do error handling!
     return (expression*)result;
@@ -263,13 +261,12 @@ expression* create_sub_expression(Parser *parser)
 expression* create_infix_expression(Parser *parser, expression* _lhs, int min_bp ) 
 {
   infix_expression* result = malloc(sizeof(infix_expression));
-  result->base.display = &infix_display;
   result->base.evaluate = &infix_expression_evaluate;
 
   result->lhs = _lhs;
   result->operator = parser->consume(parser);
   // advance();
-  result->rhs = create_expression(parser, min_bp, SEM);    
+  result->rhs = create_expression(parser, min_bp, SMI);    
 
   return(expression*)result;
 }
@@ -277,10 +274,9 @@ expression* create_infix_expression(Parser *parser, expression* _lhs, int min_bp
 expression* create_prefix_expression(Parser *parser, int min_bp ) 
 {
   prefix_expression* result = malloc(sizeof(prefix_expression));
-  result->base.display = &prefix_display;
   result->base.evaluate = &prefix_expression_evaluate;
   result->operator = parser->consume(parser);
-  result->body = create_expression(parser,min_bp, stopAt);
+  result->body = create_expression(parser,min_bp, SMI);
 
   return(expression*)result;
 }
@@ -288,7 +284,6 @@ expression* create_prefix_expression(Parser *parser, int min_bp )
 expression* create_postfix_expression(Parser *parser, expression* _lhs, int min_bp ) 
 {
   prefix_expression* result = malloc(sizeof(prefix_expression));
-  result->base.display = &postfix_display;
   result->base.evaluate = &postfix_expression_evaluate;
 
   result->body = _lhs;
@@ -319,7 +314,7 @@ expression* create_expression(Parser *parser, int right_bp, TokenName stopAt)
   // and into the infix AST node.
   while(!(parser->peekFor(parser,(int) stopAt) ) && right_bp < bp_lookup( parser->peek(parser,0).tok ).lp) {
     if(parser->peekFor(parser,INC) || parser->peekFor(parser,DEC)) {
-      result = create_postfix_expression(parser, bp_lookup( parser->peek(parser,0).tok).rp);
+      result = create_postfix_expression(parser, result, bp_lookup( parser->peek(parser,0).tok ).rp);
     } 
     else {
       result = create_infix_expression(parser, result, bp_lookup( parser->peek(parser,0).tok).rp );
@@ -329,16 +324,17 @@ expression* create_expression(Parser *parser, int right_bp, TokenName stopAt)
   assert(result != NULL);
   return result;
 }
-//
-// void prattParse(Parser *parser, TokenName stopAt) 
-// {
-//   expression* ast = create_expression(parser, 0, stopAt);       
-// }
-//
-// void Parsering(Parser *parser) 
-// {
-//   prattParse();
-// }
-//
+
+void prattParse(Parser *parser, TokenName stopAt) 
+{
+  expression* ast = create_expression(parser, 0, stopAt);       
+  printf("result = %d\n", ast->evaluate(ast));
+}
+
+void Parse(Parser *parser) 
+{
+  prattParse(parser, SMI);
+}
+
 
 

@@ -3,7 +3,6 @@
 #include "asserts.h"
 typedef struct expression 
 {
-  void(*display)(struct expression*, int indent);
   int(*evaluate)(struct expression*);
 } expression;
 
@@ -55,8 +54,10 @@ typedef struct
 
 Token peek_token(Parser *,int);
 int peekFor_token(Parser *,int);
-void consume_token(Parser *);
-int TryConsume_token(Parser *, TokenName);
-expression* create_expression(Parser *parser, int right_bp);
+Token consume_token(Parser *);
+int TryConsume_token(Parser *, int);
+expression* create_expression(Parser *parser, int right_bp, TokenName stopAt);
+
+void Parse(Parser *);
 
 #endif // !PARSER_H
