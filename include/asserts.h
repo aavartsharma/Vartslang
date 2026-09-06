@@ -4,6 +4,21 @@
 #include "grammer.h"
 #define ASSERTS_H
 
+typedef char *String;
+typedef const char *CString;
+
+
+void printE_impl(CString func,CString file,int line, CString message, ...);
+
+void printL_impl(CString func, CString file, int line, CString message, ...);
+
+#define printE(msg, ...) \
+    printE_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+
+#define printL(msg, ...) \
+    printL_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+
+
 #define LINKED_LIST(type, name)      \
 typedef struct name {          \
   type val;                    \
@@ -16,7 +31,9 @@ static name *new_##name(type val) {   \
   return temp; \
 } \
 static name *next_##name(name *cur){ \
-  return cur->next_el; \
+  if(cur->next_el != NULL) return cur->next_el; \
+  printE("there is no next memeber");   \
+  return NULL;   \
 }     \
 static name *push_##name(name **cur,name *next_el) {\
   if(cur == NULL) { \
@@ -45,10 +62,6 @@ static void show_item_##name(name *n) { \
 
 // type, identifer
 LINKED_LIST(char,chr_node);
-
-typedef char *String;
-typedef const char *CString;
-
 typedef struct {
   String src; 
   size_t len;
@@ -81,15 +94,5 @@ typedef struct Parser {
   int (*TryConsume)(struct Parser*,int);
   Program *m_res;
 } Parser;
-
-void printE_impl(CString func,CString file,int line, CString message, ...);
-
-void printL_impl(CString func, CString file, int line, CString message, ...);
-
-#define printE(msg, ...) \
-    printE_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
-
-#define printL(msg, ...) \
-    printL_impl(__func__, __FILE__, __LINE__, msg, ##__VA_ARGS__)
 
 #endif

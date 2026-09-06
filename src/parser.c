@@ -47,9 +47,13 @@ expression* create_expression(Parser *parser, int right_bp, TokenName stopAt);
 
 Token peek_token(struct Parser *parser,int offset)  // front
 {
-  Token_node *temp = parser->m_buf;
-  for (int i = offset; i < offset; i--){
+  Token_node *temp = ((Parser *)parser)->m_buf;
+  for (int i = offset; i != 0; i--){
     temp = next_Token_node(temp);
+  }
+  if(parser->m_buf == NULL) {
+    printE("parser->m_buf is null");
+    exit(-1);
   }
   return temp->val;
 }
@@ -307,6 +311,9 @@ expression* create_expression(Parser *parser, int right_bp, TokenName stopAt)
 
     // --- Prefix Operators ---
   } else if (parser->peekFor(parser,OP_UNARY)) {
+    if(parser->m_buf == NULL){
+      printE("error of null");
+    }
     result = create_prefix_expression( parser, prefix_bp_lookup( parser->peek(parser,0).tok ) );
   }
 
@@ -327,6 +334,7 @@ expression* create_expression(Parser *parser, int right_bp, TokenName stopAt)
 
 void prattParse(Parser *parser, TokenName stopAt) 
 {
+  printf("token - %d\n " ,next_Token_node( next_Token_node(parser->m_buf))->val.tok);
   expression* ast = create_expression(parser, 0, stopAt);       
   printf("result = %d\n", ast->evaluate(ast));
 }

@@ -100,7 +100,8 @@ typedef enum {
   OP_TYPE_CAST,
   PUNCTATION,
   LITERAL,
-  IDENTIFER
+  IDENTIFER,
+  SPEICAL
 } TokenType;
 
 

@@ -19,15 +19,19 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  printf("%s\n", content.src);
+  
   lexer src = {
     .m_buf = NULL,
     .m_index= 0,
     .src = content,
     .m_res = NULL 
   };
-
+  
   tokenize(&src);
+  if(src.m_res == NULL){
+    printE("src.M-res is null");
+    return -1;
+  }
   Parser tokens = {
     .m_buf = src.m_res,
     .peek = &peek_token,
@@ -36,6 +40,10 @@ int main(int argc, char* argv[]) {
     .TryConsume = &TryConsume_token,
     .m_res = NULL,
   };
+  if(tokens.m_buf == NULL){
+    printE("tokens.M-res is null");
+    return -1;
+  }
   Parse(&tokens);
   free(src.src.src);
   return 0;
