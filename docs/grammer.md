@@ -1,8 +1,10 @@
 # Vartslang's grammer
 
-<program> ::= (<compound_stm>)*
+<program> ::= (<compound_stm> | <simple_stm>)*
 
-<compound_stm> ::= <assign_stm> | <if_stm> | <lp_stm> | <do_lp_stm> | <for_each_loop> | <function_call_stm>  
+<simple_stm> ::= <assign_stm> | <return_stm> | <function_call_stm> | <import_stm>
+
+<compound_stm> ::=  <if_stm> | <lp_stm> | <do_lp_stm> | <for_each_loop>   
 
 <assign_stm> ::= <assign/variable> | <assign/array> | <assign/function> | <assign/struct> | <assign/enum> | <assign/class>
 
@@ -14,13 +16,13 @@
 <lp_stm> ::= 
     "<-?->" "{" ( <assign_stm> ("," <assign_stm>)* ) | E ";" 
     <expr> | E ";" 
-     (<expr> | ( <expr> ",")) | E "}" 
+    (<expr> ( ","<expr> )* ) | E "}" 
     <arrow> <block>
 
 <do_lp_stm> ::= <block> <arrow> "<-?->" "{" 
     E | ( <assign_stm> ("," <assign_stm>)* ) ";" 
     <expr> | E ";" 
-    E | (<expr> | <expr> ( <expr> ",")* ) "}"
+    E | ( <expr> ( <expr> ",")* ) "}"
 
 <for_each_loop> ::= "<-:->" "{" <type> <identifer> "<-:" <identifer> "}" <arrow> <block>
 
@@ -30,15 +32,33 @@
 
 <assign/variable> ::= <type> <identifer> (<op/assign> <expr> | E) ";"
 
-<assign/array> ::= "<-[]->" "{" <type>  ( "," <type> )* "}" (<op/assign> ) ";"
+<assign/array> ::= "<-[]->" "{" <type>  ( "," <type> )* "}" (<op/assign>  "[]" ( <arrary> | <expr> ) ) | E ";"
 
-<assign/function> ::= "<-@->" "{" <type> "}" <identifer> <op/assign> <block> ";"
+<assign/function> ::= "<-@->" "{" <type> "}" <identifer> (<op/assign> (<block> | <expr>) ) | E ";"
 
-<assign/struct> ::= "<-<+>->" "{" "}" <identifer> <op/assign> "<+>" "{" "}" <op/assign> "{" ( <assign_stm>* ) "}" ";"
+<assign/struct> ::= 
+"<-<+>->" "{" "}" <identifer> 
+( 
+    <op/assign> 
+    "<+>" "{" "}" <arrow> 
+    ( 
+        "{" ( <assign_stm> ";" )* "}" |
+        <expr> |
+        E
+    ) 
+) | E 
+";"
 
-<assign/enum> ::= "<-<|>->" "{" "}" <identifer> <arrow> "<|>" "{" "}" <op/assign> "{" ((<identifer> ((<op/assign>) | E)* "}" ";"
+<assign/enum> ::= 
+"<-<|>->" "{" "}" <identifer> <op/assign> "<|>" "{" "}" <arrow> 
+"{" 
+    (
+        <identifer> ( (<op/assign>  <literal>) | E ) ","
+    )* 
+"}" ";"
 
-<assign/class> ::= "<-<:>->" "{" "}" <identifer> <arrow> "<:>" "{" ( <identifer> ("," <identifer> )* ) | E "}" <op/assign> <block> ";"
+<assign/class> ::= "<-<:>->" "{" "}" <identifer> <op/assign_stm> 
+                    "<:>" "{" ( <identifer> ("," <identifer> )* ) | E "}" <arrow> <block> ";"
 
 <type> ::= "i32" | "i64" | "f32" | "f64" | "u8"
 

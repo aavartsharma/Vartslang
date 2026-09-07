@@ -9,40 +9,6 @@
 #include "grammer.h"
 #include "asserts.h"
 
-/*void peak_token(lexer *src, int offset)
-  {
-
-  }*/
-/* 
-   Token_node consume_token() 
-   {
-/*return m_token++;
-}*/
-/*void ret_tree(parser *tokens) {
-  Token_node *j = NULL;
-  Expr *k = parser->m_res;
-  for(Token_node *i = tokens->lexer_list->m_res; i != NULL; i = next_Token_node(i)) {
-  if()
-  }
-  }*/
-/*void try_consume(parser *tokens, tokentype expected_token)
-{
-  return tokens->token == expected_token;   
-}*/
-
-
-
-/*typedef enum  token_id;
-
-// A token - returned by the lexer
-typedef struct {
-    char* start_ptr;
-    char* end_ptr;
-    token_id type_id;
-} token;
-*/
-
-// char *current_pos;
 expression* create_expression(Parser *parser, int right_bp, TokenName stopAt);
 
 Token peek_token(struct Parser *parser,int offset)  // front
@@ -102,7 +68,7 @@ int prefix_bp_lookup(TokenName type)
     case MNS: return 300;
     case NOT: return 300; 
     case BNT: return 300;
-    default: return 0;
+    default:  return 0;
   }
 }
 

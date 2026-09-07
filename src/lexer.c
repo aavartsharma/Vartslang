@@ -23,7 +23,8 @@ char consume_char(lexer *src) {
 
 Token to_token(const String token_src) {
   // Keyword
-  if      (strcmp(token_src, "<-@->") == 0)     return (Token){F32,KEYWORD,1,{NULL}};
+  if      (strcmp(token_src, "<+$+>") == 0)     return (Token){IMP,KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "<-@->") == 0)     return (Token){F32,KEYWORD,1,{NULL}};
   else if (strcmp(token_src, "<-?->") == 0)     return (Token){LOP,KEYWORD,1,{NULL}};
   else if (strcmp(token_src, "<-:->") == 0)     return (Token){FEL,KEYWORD,1,{NULL}};
   else if (strcmp(token_src, "<-[]->") == 0)    return (Token){LST,KEYWORD,1,{NULL}};
@@ -43,10 +44,11 @@ Token to_token(const String token_src) {
   else if (strcmp(token_src, "f32") == 0)       return (Token){F32,KEYWORD,1,{NULL}};
   else if (strcmp(token_src, "f64") == 0)       return (Token){F64,KEYWORD,1,{NULL}};
   else if (strcmp(token_src, "u8") == 0)        return (Token){U8, KEYWORD,1,{NULL}};
+  else if (strcmp(token_src, "b1") == 0)        return (Token){B1, KEYWORD,1,{NULL}};
  
 
   // operator / assign
-  else if (strcmp(token_src, "<-") == 0)        return (Token){ASG,OP_ASSIGN,1,{ NULL}};
+  else if (strcmp(token_src, "<-") == 0)        return (Token){ASG,OP_ASSIGN,1,{NULL}};
 
   // operator/arthimatic
   else if (strcmp(token_src, "+") == 0)         return (Token){PLS,OP_ARTHIMATIC,1,{NULL}};
@@ -93,9 +95,9 @@ Token to_token(const String token_src) {
   
   //literals
   else if (isdigit(*token_src))                 return (Token){INT,LITERAL,0,{.numral_value = atoi(token_src)}};
-  else if (strcmp(token_src, "true") == 0)      return (Token){TRU,LITERAL,0,{.numral_value = 1}};
-  else if (strcmp(token_src, "false") == 0)     return (Token){FLS,LITERAL,0,{.numral_value= 0}};
-  else if (strcmp(token_src, "null") == 0)      return (Token){NULL_,LITERAL,0,{NULL}};
+  else if (strcmp(token_src, ":+:") == 0)       return (Token){TRU,LITERAL,0,{.numral_value = 1}};
+  else if (strcmp(token_src, ":-:") == 0)       return (Token){FLS,LITERAL,0,{.numral_value= 0}};
+  else if (strcmp(token_src, "><") == 0)        return (Token){NULL_,LITERAL,0,{NULL}};
 
   else if (isalpha(*token_src))                 return (Token){ID, IDENTIFER,0, {.str_value = token_src}};
 
@@ -199,7 +201,8 @@ void tokenize(lexer *src) { // make this return list of tokens somehow
     {
       Token_node *tok = new_Token_node(ret_token(src,extr,0));
       push_Token_node(&(src->m_res),tok);
-    } else 
+    } 
+    else 
     {
       consume_char(src);
     }

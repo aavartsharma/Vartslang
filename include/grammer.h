@@ -3,26 +3,28 @@
 
 typedef enum {
   // Keywords
-  FUN=100,  // <-@->
-  LOP,       // <-?->
-  FEL,       // <-:-> 
-  LST,       // <-[]->
-  STC,       // <-<+>->
-  ENM,       // <-<|>->
-  CLS,       // <-<:>->
-  ARG,       // @  
-  CAL,       // <|
-  IF,        // ?
-  RET,       // ^^^
-  LIT,       // []
-  STA,       // <+>
-  ENA,       // <|>
-  ITA,       // <:>
+  IMP=100,    // <+$+>
+  FUN,        // <-@->
+  LOP,        // <-?->
+  FEL,        // <-:-> 
+  LST,        // <-[]->
+  STC,        // <-<+>->
+  ENM,        // <-<|>->
+  CLS,        // <-<:>->
+  ARG,        // @  
+  CAL,        // <|
+  IF,         // ?
+  RET,        // ^^^
+  LIT,        // []
+  STA,        // <+>
+  ENA,        // <|>
+  ITA,        // <:>
   I32,
   I64,
   F32,
   F64,
   U8,
+  B1,
     
   // operator/assign
   ASG=200,   // <-
@@ -107,188 +109,93 @@ typedef enum {
 
 
 #define GEN_FUN(name, start_, end_)       \
-    int name(TokenType tok)                             \
-    {                                                   \
-        return tok >= (int)(start_) && (tok < (int)(end_));         \
-    } 
+  int name(TokenType tok)                             \
+  {                                                   \
+    return tok >= (int)(start_) && (tok < (int)(end_));         \
+  } 
 
+typedef struct {
+  Type type;
+  ID id;
+  expression expr;
+} Assign_Var;
 
-/*
-typedef enum {
-  KEY_FUN = FUN,       // <-@->
-  KEY_LOP,       // <-?->
-  KEY_FEL,       // <-:-> 
-  KEY_LST,       // <-[]->
-  KEY_STC,       // <-<+>->
-  KEY_ENM,       // <-<|>->
-  KEY_CLS,       // <-<:>->
-  KEY_ARG,       // @  
-  KEY_CAL,       // <|
-  KEY_IF,        // ?
-  KEY_RET,       // ^
-  KEY_LIT,       // []
-  KEY_STA,       // <+>
-  KEY_ENA,       // <|>
-  KEY_ITA,       // <:>
-  KEY_I32,
-  KEY_I64,
-  KEY_F32,
-  KEY_F64,
-  KEY_U8
-} keywords;
+typedef struct {
+  Type *type;
+  ID id;
+  expression expr;
+} Assign_Arr;
 
-typedef enum {
-  type_I32 = I32,
-  type_I64 = I64,
-  type_F32 = F32,
-  type_F64 = F64,
-  type_U8 = U8,
-} type;
+typedef struct Assign_Func {
+  Type type;
+  ID id;
+  union {
+    Block b; 
+    Assign_Func *func_ptr;
+  } code;
+} Assign_Func;
 
-typedef enum {
-  op_assign_ASG=ASG;   // <-
-} op_assign;
+typedef struct {
+  ID id; 
+  Assign_Stm *assign_stm;
+} Assign_Struct;
 
-typedef enum {
-  op_arthimatic_MNS = MNS,
-  op_arthimatic_PLS,
-  op_arthimatic_MUL,
-  op_arthimatic_DIV,
-  op_arthimatic_INC,       // ++
-  op_arthimatic_DEC       // -- 
-} op_arthimatic;
+typedef struct {
+  
+} Assign_Enum;
 
-typedef enum {
-  op_relational_MT = MT,  // >
-  op_relational_LT,        // <
-  op_relational_MTE,       // >=
-  op_relational_LTE,       // <=
-  op_relational_EQU,       // ==
-  op_relational_NEQ       // !=
-} op_relational;
+typedef struct {
+  
+} Assign_Class;
 
-typedef enum {
-  op_logical_NOT = NOT, // !
-  op_logical_AND,       // /\ /
-  op_logical_OR        // \/
-} op_logical;
+typedef struct {
+  Assign_Var Var;
+  Assign_Arr Arr;
+  Assign_Func Func;
+  Assign_Struct Struct;
+  Assign_Enum Enum;
+  Assign_Class Class;
+} Assign_Stm;
 
-typedef enum {
-  op_bitwise_BNT = BNT,       // ~
-  op_bitwise_BND,       // &
-  op_bitwise_BOR,       // | 
-  op_bitwise_XOR,       // ^ 
-  op_bitwise_SHL,       // <<
-  op_bitwise_SHR       // >>
-} op_bitwise;
+typedef struct If_Stm {
+  expression *expr;
+  Block b;
+  struct If_Stm *next;
+} If_Stm;
 
-typedef enum {
-  op_membership_IN = IN,  // <-:
-} op_membership;
-
-typedef enum {
-  op_member_access_DOT=DOT       // .
-} op_member_access;
-
-typedef enum {
-  op_unary_PMS = PMS
-} op_unary;
-
-typedef enum {
-  op_type_cast_TCO = TCD
-} op_type_cast;
-
-typedef enum {
-  puctation_ARW=ARW,   // ->
-  puctation_SMI,       // ;
-  puctation_OCR, puctation_CCR,  // { }
-  puctation_CMA,       // ,
-  puctation_NL        // \n
-} puctation;
-
-typedef enum {
-  literal_INT = INT,
-  literal_FLT,
-  literal_CHR,
-  literal_STR,
-  literal_TRU, 
-  literal_FLS,
-  literal_NULL_
-} literal;
-
-typedef enum {
-  identifer_ID = ID
-} identifer; 
-
-*/
-
-// grammer AST node Definitions
-
-// typedef struct {
-//    lit;  
-//   String s1;
-// } Literal;
-//
-// typedef struct {
-//   Token id;  
-//   Expr *expr_g;
-//   int count;
-//
-//   Token *id;
-//   Expr expr_g; 
-//   int count1;
-// } function_call;
-//
-// typedef struct {
-//   Token lit;  
-//   identifer id;
-// } primary_expr;
-//
-// typedef struct {
-//   Expr oprand1;
-//   oprator op;
-//   Expr oprand2;
-// } binary_expr;
-//
-// typedef union unary_expr {
-//   struct {
-//     op_unary op; 
-//     union {
-//       primary_expr 
-//       unary_expr 
-//     } s;   
-//   };
-//   struct {
-//     union {
-//       unary_expr
-//       primary_expr
-//     } n; 
-//     op_unary op;
-//   };
-//   struct {
-//     op_unary 
-//     grouping
-//   };
-// } ;
-//
-// typedef union grouping {
-//   Expr
-// } ;
-//
-// typedef union {
-//   struct primary_expr; 
-//   struct unary_expr;
-//   struct binary_expr;
-//   struct grouping;
-// } Expr;
-//
-
-// typedef struct {
-//   type
-// } assign_variable;
-//
 typedef struct  {
+  Assign_Stm *assign_stm;
+  expression condition;   
+  expression *;
+  Block b;
+} Lp_Stm;
+
+typedef struct {
+  Assign_Stm *assign_stm;
+  expression condition;   
+  expression *;
+  Block b;
+} Do_Lp_Stm;
+
+typedef struct {
    
+} For_Each_Loop;
+
+typedef struct {
+
+} Func_Call_Stm;
+
+typedef union {
+  Assign_Stm assign_stm;
+  If_Stm if_stm;
+  Lp_Stm lp_stm;
+  Do_Lp_Stm do_lp_stm;
+  For_Each_Loop for_each_loop;
+  Func_Call_Stm func_call_stm;
+} Compound_Stm;
+
+typedef struct  {
+  Compound_Stm *statements;
 } Program;
 
 #endif
